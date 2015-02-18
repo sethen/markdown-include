@@ -1,0 +1,4 @@
+{
+	"build" : "README.md",
+	"files" : ["./docs/_README.md"]
+}
