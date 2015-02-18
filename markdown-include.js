@@ -6,23 +6,32 @@
 (function () {
 	"use strict";
 
+	var exec = require('child_process').exec;
 	var fs = require('fs');
 	var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 	var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
 	var build = {};
 
 	/**
-	 * Write file function
-	 * @param  {String} path Path to build new file
-	 * @param  {String} data Data to write into file
+	 * Build files from markdown.json
+	 * @param  {String} path File path to markdown.json
 	 */
-	function buildFile(path, data) {
-		fs.writeFile(path, data, function (err) {
+	function buildFiles(path) {
+		fs.readFile(path, function (err, data) {
 			if (err) {
 				throw err;
 			}
 
-			console.info(path + ' has been built successfully');
+			var options = JSON.parse(data.toString());
+			var files = options.files;
+			var i;
+
+			for (i = 0; i < files.length; i += 1) {
+				var file = files[i];
+				processFile(file);
+				replaceIgnoreTags(file);
+				writeFile(options.build, build[file].parsedData);
+			}
 		});
 	}
 
@@ -183,20 +192,20 @@
 		}
 	}
 
-	fs.readFile('markdown.json', function (err, data) {
-		if (err) {
-			throw err;
-		}
+	/**
+	 * Write file wrapper
+	 * @param  {String} path Path to build new file
+	 * @param  {String} data Data to write into file
+	 */
+	function writeFile(path, data) {
+		fs.writeFile(path, data, function (err) {
+			if (err) {
+				throw err;
+			}
 
-		var options = JSON.parse(data.toString());
-		var files = options.files;
-		var i;
+			console.info(path + ' has been built successfully');
+		});
+	}
 
-		for (i = 0; i < files.length; i += 1) {
-			var file = files[i];
-			processFile(file);
-			replaceIgnoreTags(file);
-			buildFile(options.build, build[file].parsedData);
-		}
-	});
+	buildFiles(process.argv[2]);
 }());

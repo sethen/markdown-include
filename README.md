@@ -7,7 +7,19 @@ markdown-include is built using Node.js and allows you to include markdown files
 #include "another-markdown-file.md"
 ```
 
-Assuming that `markdown.file.md` contents are `Something in markdown file!` and `another-markdown-file.md` contents are `Something in another markdown file!` it would compile to:
+Assuming that `markdown.file.md` contents are:
+
+```
+Something in markdown file!
+```
+
+And assuming that `another-markdown-file.md` contents are: 
+
+```
+Something in another markdown file!
+``` 
+
+It would compile to:
 
 ```
 Something in markdown file!
@@ -17,16 +29,20 @@ Something in another markdown file!
 
 # How To Use
 
-markdown-include is very easy to use.  Just include a `markdown.json` file in your project root with your options and run from the command line to compile your documents.
+markdown-include is very easy to use.  Just include a `markdown.json` file in your project root with your options and run from the command line to compile your documents like so:
+
+```
+node path/to/markdown-include.js path/to/markdown.json
+```
 
 ## markdown.json
 
 `markdown.json` can be populated with the following options:
 
-| Option        | Type          | Description                                              |
-|:-------------:|:-------------:|:--------------------------------------------------------:|
-| `build`       | String        | File path of where everything should be compiled         |
-| `files`       | Array         | Array of files to to compile                             |
+| Option        | Type          | Description                                                                |
+|:-------------:|:-------------:|:--------------------------------------------------------------------------:|
+| `build`       | String        | File path of where everything should be compiled, like `README.md`         |
+| `files`       | Array         | Array of files to to compile                                               |
 
 
 # How It Works

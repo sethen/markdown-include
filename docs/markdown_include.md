@@ -7,7 +7,19 @@ markdown-include is built using Node.js and allows you to include markdown files
 #include "another-markdown-file.md" !ignore
 ```
 
-Assuming that `markdown.file.md` contents are `Something in markdown file!` and `another-markdown-file.md` contents are `Something in another markdown file!` it would compile to:
+Assuming that `markdown.file.md` contents are:
+
+```
+Something in markdown file!
+```
+
+And assuming that `another-markdown-file.md` contents are: 
+
+```
+Something in another markdown file!
+``` 
+
+It would compile to:
 
 ```
 Something in markdown file!
