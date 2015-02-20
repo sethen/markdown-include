@@ -1,15 +1,8 @@
 {
   "name": "markdown-include",
   "version": "0.1.0",
-  "author": "Sethen Maleno",
-  "description": "markdown-include is built using Node.js and allows you to include markdown files into other markdown files using a C style include syntax",
+  "description": "Include markdown files into other markdown files with C style syntax.",
   "main": "markdown-include.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "node markdown-include.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sethen/markdown-include.git"
@@ -19,6 +12,7 @@
     "markdown",
     "include"
   ],
+  "author": "Sethen Maleno",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sethen/markdown-include/issues"
