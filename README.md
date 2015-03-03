@@ -1,6 +1,19 @@
+* [markdown-include](#markdown-include)
+  * [Compile your markdown files](#compile-your-markdown-files)
+  * [Make a table of contents](#make-a-table-of-contents)
+* [How To Install](#how-to-install)
+* [How To Use](#how-to-use)
+  * [markdown.json](#markdown.json)
+* [How It Works](#how-it-works)
+
+
 # markdown-include
 
-markdown-include is built using Node.js and allows you to include markdown files into other markdown files using a C style include syntax:
+markdown-include is built using Node.js and allows you to include markdown files into other markdown files using a C style include syntax.
+
+## Compile your markdown files
+
+markdown-include's main feature is that it allows you to include allows you to include markdown files into other markdown files, like so:
 
 ```
 #include "markdown-file.md"
@@ -26,6 +39,12 @@ Something in markdown file!
 Something in another markdown file!
 ```
 
+## Make a table of contents
+
+Aside from compiling your markdown files, markdown-include can also build your table of contents.  This works by evaluating the heading tags inside of your files.  Since markdown works on using `#` for headings, this makes it easy to assemble table of contents from them.  The more `#` you have in front of your headings (up to 6) will decide how the table of contents is built.  Use one `#` and it's a top level navigation item... Use two `#` and it would be underneath the previous navigation item.
+
+For each heading that you would like to be included in a table of contents just add ` !heading` to the end of it.
+
 
 # How To Install
 
@@ -50,15 +69,16 @@ node path/to/markdown-include.js path/to/markdown.json
 
 `markdown.json` can be populated with the following options:
 
-| Option        | Type          | Description                                                                |
-|:-------------:|:-------------:|:--------------------------------------------------------------------------:|
-| `build`       | String        | File path of where everything should be compiled, like `README.md`         |
-| `files`       | Array         | Array of files to to compile                                               |
+| Option            | Type          | Description                                                                |
+|:-----------------:|:-------------:|:--------------------------------------------------------------------------:|
+| `build`           | String        | File path of where everything should be compiled, like `README.md`         |
+| `files`           | Array         | Array of files to to compile                                               |
+| `tableOfContents` | Boolean       | `true` to build table of contents dynamically                              |
 
 
 # How It Works
 
-markdown-include works by recursively going through files based on the tags that are found.  For instance, considering the following in a `_README.md` file:
+markdown-include works by recursively going through files based on the tags that are found.  For instance, consider the following in a `_README.md` file:
 
 ```
 #include "first-file.md"

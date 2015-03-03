@@ -1,4 +1,4 @@
-# How To Install
+# How To Install !heading
 
 markdown-include is available on npm for easy installation:
 

@@ -1,6 +1,6 @@
 {
   "name": "markdown-include",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Include markdown files into other markdown files with C style syntax.",
   "main": "markdown-include.js",
   "repository": {

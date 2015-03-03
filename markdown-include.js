@@ -10,13 +10,61 @@
 	var fs = require('fs');
 	var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 	var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
+	var headingPattern = /#+\s.+ !heading/gm;
 	var build = {};
+	var tableOfContents = '';
 
 	/**
-	 * Build files from markdown.json
+	 * Build content item for navigation
+	 * @param  {Object} obj Object containing count and headingTag
+	 * @return {String}     String for markdown navigation item
+	 */
+	function buildContentItem(obj) {
+		var headingTag = obj.headingTag;
+		var count = obj.count;
+		var item = headingTag.substring(count + 1);
+		var index = headingTag.indexOf(item);
+		var headingTrimmed = headingTag.substring(index).trim().split(' ').join('-').toLowerCase();
+		var navItem;
+
+		/**
+		 * Small utility function for building links for navigation items
+		 * @param  {String} heading Navigation item
+		 * @return {String}         Navigation item that's linked
+		 */
+		function buildNavItem(heading) {
+			return '[' + item + '](#' + heading + ')\n';
+		}
+
+		switch (obj.count) {
+			case 1:
+				navItem = '* ' + buildNavItem(headingTrimmed);
+			break;
+			case 2:
+				navItem = '  * ' + buildNavItem(headingTrimmed);
+			break;
+			case 3:
+				navItem = '    * ' + buildNavItem(headingTrimmed);
+			break;
+			case 4:
+				navItem = '      * ' + buildNavItem(headingTrimmed);
+			break;
+			case 5:
+				navItem = '        * ' + buildNavItem(headingTrimmed);
+			break;
+			case 6:
+				navItem = '          * ' + buildNavItem(headingTrimmed);
+			break;
+		}
+
+		return navItem;
+	}
+
+	/**
+	 * Compile files from markdown.json
 	 * @param  {String} path File path to markdown.json
 	 */
-	function buildFiles(path) {
+	function compileFiles(path) {
 		fs.readFile(path, function (err, data) {
 			if (err) {
 				throw err;
@@ -28,11 +76,55 @@
 
 			for (i = 0; i < files.length; i += 1) {
 				var file = files[i];
+
 				processFile(file);
-				replaceIgnoreTags(file);
-				writeFile(options.build, build[file].parsedData);
+				build[file].parsedData = stripFileTags({
+					data: build[file].parsedData, 
+					pattern: ignorePattern, 
+					string: ' !ignore'
+				});
+
+				if (options.tableOfContents) {
+					compileHeadingTags(file);
+					build[file].parsedData = tableOfContents + '\n\n' + build[file].parsedData;
+				}
+
+				writeFile(options, build[file].parsedData);
 			}
 		});
+	}
+
+
+	/**
+	 * Compiling heading tags in a parsed file
+	 * @param  {String} file File path
+	 */
+	function compileHeadingTags(file) {
+		var headingTags = findHeadingTags(build[file].parsedData);
+		var replacedHeadingTag;
+		var parsedHeading;
+		var i;
+
+		for (i = 0; i < headingTags.length; i += 1) {
+			replacedHeadingTag = headingTags[i].replace(' !heading', '');
+			parsedHeading = parseHeadingTag(replacedHeadingTag);
+			tableOfContents += buildContentItem(parsedHeading);
+		}
+
+		build[file].parsedData = stripFileTags({
+			data: build[file].parsedData, 
+			pattern: headingPattern,
+			string: ' !heading'
+		});
+	}
+
+	/**
+	 * Finding heading tags that have !heading
+	 * @param  {String} parsedData Parsed data from includes
+	 * @return {Array}             Array of matching heading tags
+	 */
+	function findHeadingTags(parsedData) {
+		return parsedData.match(headingPattern) || [];
 	}
 
 	/**
@@ -108,6 +200,30 @@
 	}
 
 	/**
+	 * [parseHeadingTag description]
+	 * @param  {[type]} headingTag [description]
+	 * @return {[type]}            [description]
+	 */
+	function parseHeadingTag(headingTag) {
+		var count = 0;
+		var i;
+
+		for (i = 0; i < headingTag.length; i += 1) {
+			if (headingTag[i] === '#') {
+				count += 1;
+			}
+			else {
+				break;
+			}
+		}
+
+		return {
+			count: count,
+			headingTag: headingTag
+		};
+	}
+
+	/**
 	 * Processes array of include tags and passes file for recursion
 	 * @param  {String} file        File passed for additional processing to check for more includes
 	 * @param  {String} currentFile Current file passed on recursion to check for circular dependencies
@@ -161,34 +277,38 @@
 	}
 
 	/**
-	 * Replaces include tags with an !ignore
-	 * @param  {String} file File path
+	 * Strips tags in a given file
+	 * @param  {Object} obj Object containing file path, pattern to match and string to replace
+	 * @return {String}     Replaced data from object keys
 	 */
-	function replaceIgnoreTags(file) {
-		var obj = build[file];
-		var parsedData = obj.parsedData;
+	function stripFileTags(obj) {
 		var replacedData;
 		
-		if (ignorePattern.test(parsedData)) {
-			var ignores = parsedData.match(ignorePattern);
+		if (obj.pattern.test(obj.data)) {
+			var patterns = obj.data.match(obj.pattern);
 			var i;
 
-			for (i = 0; i < ignores.length; i += 1) {
-				var ignore = ignores[i];
-				var index = parsedData.indexOf(ignore);
-				var ignoreLength = ' !ignore'.length;
-				var ignoreTagLength = ignores[i].length;
-				var replacedTag = ignore.substring(0, ignoreTagLength - ignoreLength);
+			for (i = 0; i < patterns.length; i += 1) {
+				var currentPattern = patterns[i];
+				var index = obj.data.indexOf(currentPattern);
+				var stringLength = obj.string.length;
+				var currentPatternTagLength = patterns[i].length;
+				var replacedTag = currentPattern.substring(0, currentPatternTagLength - stringLength);
 
-				if (replacedData) {
-					replacedData = replacedData.replace(ignore, replacedTag);
+				if (obj.replace) {
+					console.log('do something else');
 				}
 				else {
-					replacedData = obj.parsedData.replace(ignore, replacedTag);
+					if (replacedData) {
+						replacedData = replacedData.replace(currentPattern, replacedTag);
+					}
+					else {
+						replacedData = obj.data.replace(currentPattern, replacedTag);
+					}
 				}
 			}
 
-			obj.parsedData = replacedData;
+			return replacedData;
 		}
 	}
 
@@ -197,15 +317,15 @@
 	 * @param  {String} path Path to build new file
 	 * @param  {String} data Data to write into file
 	 */
-	function writeFile(path, data) {
-		fs.writeFile(path, data, function (err) {
+	function writeFile(options, parsedData) {
+		fs.writeFile(options.build, parsedData, function (err) {
 			if (err) {
 				throw err;
 			}
 
-			console.info(path + ' has been built successfully');
+			console.info(options.build + ' has been built successfully');
 		});
 	}
 
-	buildFiles(process.argv[2]);
+	compileFiles(process.argv[2]);
 }());

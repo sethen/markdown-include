@@ -1,4 +1,5 @@
 {
 	"build" : "README.md",
-	"files" : ["./docs/_README.md"]
+	"files" : ["./docs/_README.md"],
+	"tableOfContents": true
 }

@@ -1,6 +1,6 @@
-# How It Works
+# How It Works !heading
 
-markdown-include works by recursively going through files based on the tags that are found.  For instance, considering the following in a `_README.md` file:
+markdown-include works by recursively going through files based on the tags that are found.  For instance, consider the following in a `_README.md` file:
 
 ```
 #include "first-file.md" !ignore
