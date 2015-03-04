@@ -3,7 +3,7 @@
   * [Make a table of contents](#make-a-table-of-contents)
 * [How To Install](#how-to-install)
 * [How To Use](#how-to-use)
-  * [markdown.json](#markdown.json)
+  * [markdown.json](#markdownjson)
 * [How It Works](#how-it-works)
 
 
@@ -41,7 +41,7 @@ Something in another markdown file!
 
 ## Make a table of contents
 
-Aside from compiling your markdown files, markdown-include can also build your table of contents.  This works by evaluating the heading tags inside of your files.  Since markdown works on using `#` for headings, this makes it easy to assemble table of contents from them.  The more `#` you have in front of your headings (up to 6) will decide how the table of contents is built.  Use one `#` and it's a top level navigation item... Use two `#` and it would be underneath the previous navigation item.
+Aside from compiling your markdown files, markdown-include can also build your table of contents.  This works by evaluating the heading tags inside of your files.  Since markdown works on using `#` for headings, this makes it easy to assemble table of contents from them.  The more `#` you have in front of your headings (up to 6) will decide how the table of contents is built.  Use one `#` and it's a top level navigation item... Use two `#` and it would be underneath the previous navigation item and so on.
 
 For each heading that you would like to be included in a table of contents just add ` !heading` to the end of it.
 

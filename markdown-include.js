@@ -10,9 +10,32 @@
 	var fs = require('fs');
 	var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 	var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
-	var headingPattern = /#+\s.+ !heading/gm;
+	var headingPattern = /^#+\s.+ !heading/gm;
 	var build = {};
 	var tableOfContents = '';
+
+	/**
+	 * Builds links for table of contents
+	 * @param  {String} str String to test and transform
+	 * @return {String}     String for link
+	 */
+	function buildLinkString(str) {
+		var linkPatterns = {
+			dot: /\./g,
+			stick: /\|/g
+		};
+		var key;
+
+		for (key in linkPatterns) {
+			var pattern = linkPatterns[key];
+
+			if (pattern.test(str)) {
+				str = str.replace(pattern, '');
+			}
+		}
+
+		return str.trim().split(' ').join('-').toLowerCase();
+	}
 
 	/**
 	 * Build content item for navigation
@@ -24,7 +47,7 @@
 		var count = obj.count;
 		var item = headingTag.substring(count + 1);
 		var index = headingTag.indexOf(item);
-		var headingTrimmed = headingTag.substring(index).trim().split(' ').join('-').toLowerCase();
+		var headingTrimmed = buildLinkString(headingTag.substring(index));
 		var navItem;
 
 		/**
