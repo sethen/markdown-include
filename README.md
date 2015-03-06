@@ -1,3 +1,5 @@
+# Table of Contents
+
 * [markdown-include](#markdown-include)
   * [Compile your markdown files](#compile-your-markdown-files)
   * [Make a table of contents](#make-a-table-of-contents)
@@ -69,12 +71,12 @@ node path/to/markdown-include.js path/to/markdown.json
 
 `markdown.json` can be populated with the following options:
 
-| Option            | Type          | Description                                                                |
-|:-----------------:|:-------------:|:--------------------------------------------------------------------------:|
-| `build`           | String        | File path of where everything should be compiled, like `README.md`         |
-| `files`           | Array         | Array of files to to compile                                               |
-| `tableOfContents` | Boolean       | `true` to build table of contents dynamically                              |
-
+| Option                    | Type          | Description                                                                |
+|:-------------------------:|:-------------:|:--------------------------------------------------------------------------:|
+| `build`                   | String        | File path of where everything should be compiled, like `README.md`         |
+| `files`                   | Array         | Array of files to to compile                                               |
+| `tableOfContents`         | Object        | Object to hold options for table of contents generation                    |
+| `tableOfContents.heading` | String        | Heading for table of contents, added to the `tableOfContents` object       |
 
 # How It Works
 

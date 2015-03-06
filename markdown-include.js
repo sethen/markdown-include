@@ -109,7 +109,13 @@
 
 				if (options.tableOfContents) {
 					compileHeadingTags(file);
-					build[file].parsedData = tableOfContents + '\n\n' + build[file].parsedData;
+
+					if (options.tableOfContents.heading) {
+						build[file].parsedData = options.tableOfContents.heading + '\n\n' + tableOfContents + '\n\n' + build[file].parsedData;
+					}
+					else {
+						build[file].parsedData = tableOfContents + '\n\n' + build[file].parsedData;
+					}
 				}
 
 				writeFile(options, build[file].parsedData);

@@ -1,5 +1,7 @@
 {
 	"build" : "README.md",
 	"files" : ["./docs/_README.md"],
-	"tableOfContents": true
+	"tableOfContents": {
+		"heading": "# Table of Contents"
+	}
 }
