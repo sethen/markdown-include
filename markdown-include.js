@@ -8,11 +8,12 @@
 
 	var exec = require('child_process').exec;
 	var fs = require('fs');
+	var build = {};
 	var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 	var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
 	var headingPattern = /^#+\s.+ !heading/gm;
-	var build = {};
 	var tableOfContents = '';
+	var options;
 
 	/**
 	 * Builds links for table of contents
@@ -48,6 +49,7 @@
 		var item = headingTag.substring(count + 1);
 		var index = headingTag.indexOf(item);
 		var headingTrimmed = buildLinkString(headingTag.substring(index));
+		var lead = options.tableOfContents.lead && options.tableOfContents.lead === 'number' ? '1.' : '*';
 		var navItem;
 
 		/**
@@ -61,22 +63,22 @@
 
 		switch (obj.count) {
 			case 1:
-				navItem = '* ' + buildNavItem(headingTrimmed);
+				navItem = lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 			case 2:
-				navItem = '  * ' + buildNavItem(headingTrimmed);
+				navItem = '  ' + lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 			case 3:
-				navItem = '    * ' + buildNavItem(headingTrimmed);
+				navItem = '    ' + lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 			case 4:
-				navItem = '      * ' + buildNavItem(headingTrimmed);
+				navItem = '      ' + lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 			case 5:
-				navItem = '        * ' + buildNavItem(headingTrimmed);
+				navItem = '        ' + lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 			case 6:
-				navItem = '          * ' + buildNavItem(headingTrimmed);
+				navItem = '          ' + lead + ' ' + buildNavItem(headingTrimmed);
 			break;
 		}
 
@@ -93,7 +95,7 @@
 				throw err;
 			}
 
-			var options = JSON.parse(data.toString());
+			options = JSON.parse(data.toString());
 			var files = options.files;
 			var i;
 
@@ -118,7 +120,7 @@
 					}
 				}
 
-				writeFile(options, build[file].parsedData);
+				writeFile(build[file].parsedData);
 			}
 		});
 	}
@@ -324,16 +326,11 @@
 				var currentPatternTagLength = patterns[i].length;
 				var replacedTag = currentPattern.substring(0, currentPatternTagLength - stringLength);
 
-				if (obj.replace) {
-					console.log('do something else');
+				if (replacedData) {
+					replacedData = replacedData.replace(currentPattern, replacedTag);
 				}
 				else {
-					if (replacedData) {
-						replacedData = replacedData.replace(currentPattern, replacedTag);
-					}
-					else {
-						replacedData = obj.data.replace(currentPattern, replacedTag);
-					}
+					replacedData = obj.data.replace(currentPattern, replacedTag);
 				}
 			}
 
@@ -346,7 +343,7 @@
 	 * @param  {String} path Path to build new file
 	 * @param  {String} data Data to write into file
 	 */
-	function writeFile(options, parsedData) {
+	function writeFile(parsedData) {
 		fs.writeFile(options.build, parsedData, function (err) {
 			if (err) {
 				throw err;
