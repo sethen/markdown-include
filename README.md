@@ -5,6 +5,8 @@
   * [Make a table of contents](#make-a-table-of-contents)
 * [How To Install](#how-to-install)
 * [How To Use](#how-to-use)
+  * [From The Command Line](#from-the-command-line)
+  * [As A Module](#as-a-module)
   * [markdown.json](#markdownjson)
 * [How It Works](#how-it-works)
 
@@ -61,10 +63,22 @@ Use the `-g` flag if you wish to install markdown-include globally on your syste
 
 # How To Use
 
-markdown-include is very easy to use.  Just include a `markdown.json` file in your project root with your options and run from the command line to compile your documents like so:
+markdown-include is very easy to use whether on the command line or in your own node project.  Each can help you compile your markdown files as you see fit.  markdown-include does require that you define a `markdown.json` file with your options for compile.  See below for all of the options available to you.
+
+## From The Command Line
+
+Run from the command line to compile your documents like so:
 
 ```
-node path/to/markdown-include.js path/to/markdown.json
+node_modules/bin/cli.js path/to/markdown.json
+```
+
+## As A Module
+
+Just require in your node project:
+
+```
+var markdownInclude = require('markdown-include');
 ```
 
 ## markdown.json

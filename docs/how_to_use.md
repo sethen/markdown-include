@@ -1,9 +1,21 @@
 # How To Use !heading
 
-markdown-include is very easy to use.  Just include a `markdown.json` file in your project root with your options and run from the command line to compile your documents like so:
+markdown-include is very easy to use whether on the command line or in your own node project.  Each can help you compile your markdown files as you see fit.  markdown-include does require that you define a `markdown.json` file with your options for compile.  See below for all of the options available to you.
+
+## From The Command Line !heading
+
+Run from the command line to compile your documents like so:
 
 ```
-node path/to/markdown-include.js path/to/markdown.json
+node_modules/bin/cli.js path/to/markdown.json
+```
+
+## As A Module !heading
+
+Just require in your node project:
+
+```
+var markdownInclude = require('markdown-include');
 ```
 
 ## markdown.json !heading
