@@ -12,6 +12,9 @@
     "markdown",
     "include"
   ],
+  "bin": {
+    "markdown-include": "./bin/cli.js"
+  },
   "author": "Sethen Maleno",
   "license": "ISC",
   "bugs": {
