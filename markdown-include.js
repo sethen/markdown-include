@@ -5,12 +5,13 @@
  */
 var exec = require('child_process').exec;
 var fs = require('fs');
-var build = {};
+var path = require('path');
 var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
 var headingPattern = /^#+\s.+ !heading/gm;
 var tableOfContents = '';
-var options;
+
+this.build = {};
 
 /**
  * Builds links for table of contents
@@ -46,7 +47,7 @@ exports.buildContentItem = function (obj) {
 	var item = headingTag.substring(count + 1);
 	var index = headingTag.indexOf(item);
 	var headingTrimmed = this.buildLinkString(headingTag.substring(index));
-	var lead = options.tableOfContents.lead && options.tableOfContents.lead === 'number' ? '1.' : '*';
+	var lead = this.options.tableOfContents.lead && this.options.tableOfContents.lead === 'number' ? '1.' : '*';
 	var navItem;
 
 	/**
@@ -93,32 +94,32 @@ exports.compileFiles = function (path) {
 			throw err;
 		}
 
-		options = JSON.parse(data.toString());
-		var files = options.files;
+		self.options = JSON.parse(data.toString());
+		var files = self.options.files;
 		var i;
 
 		for (i = 0; i < files.length; i += 1) {
 			var file = files[i];
 
 			self.processFile(file);
-			build[file].parsedData = self.stripFileTags({
-				data: build[file].parsedData, 
+			self.build[file].parsedData = self.stripFileTags({
+				data: self.build[file].parsedData, 
 				pattern: ignorePattern, 
 				string: ' !ignore'
 			});
 
-			if (options.tableOfContents) {
+			if (self.options.tableOfContents) {
 				self.compileHeadingTags(file);
 
-				if (options.tableOfContents.heading) {
-					build[file].parsedData = options.tableOfContents.heading + '\n\n' + tableOfContents + '\n\n' + build[file].parsedData;
+				if (self.options.tableOfContents.heading) {
+					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 				else {
-					build[file].parsedData = tableOfContents + '\n\n' + build[file].parsedData;
+					self.build[file].parsedData = tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 			}
 
-			self.writeFile(build[file].parsedData);
+			self.writeFile(self.build[file].parsedData);
 		}
 	});
 };
@@ -129,7 +130,7 @@ exports.compileFiles = function (path) {
  * @param  {String} file File path
  */
 exports.compileHeadingTags = function (file) {
-	var headingTags = this.findHeadingTags(build[file].parsedData);
+	var headingTags = this.findHeadingTags(this.build[file].parsedData);
 	var replacedHeadingTag;
 	var parsedHeading;
 	var i;
@@ -140,8 +141,8 @@ exports.compileHeadingTags = function (file) {
 		tableOfContents += this.buildContentItem(parsedHeading);
 	}
 
-	build[file].parsedData = this.stripFileTags({
-		data: build[file].parsedData, 
+	this.build[file].parsedData = this.stripFileTags({
+		data: this.build[file].parsedData, 
 		pattern: headingPattern,
 		string: ' !heading'
 	});
@@ -193,7 +194,7 @@ exports.findIncludeTags = function (rawData) {
  * @param  {String} currentFile Current file that an include was found in
  */
 exports.processFile = function (file, currentFile) {
-	if (file in build) {
+	if (file in this.build) {
 		replaceIncludeTags(file);
 	}
 	else {
@@ -201,17 +202,17 @@ exports.processFile = function (file, currentFile) {
 		var includeTags = this.findIncludeTags(rawData);
 		var files = includeTags.length ? this.processIncludeTags(file, currentFile, includeTags) : null;
 
-		build[file] = {
-			files:  files,
+		this.build[file] = {
+			files: files,
 			includeTags: includeTags,
 			rawData: rawData,
 		};
 
 		if (files && includeTags) {
-			build[file].parsedData = this.replaceIncludeTags(file);
+			this.build[file].parsedData = this.replaceIncludeTags(file);
 		}
 		else {
-			build[file].parsedData = rawData;
+			this.build[file].parsedData = rawData;
 		}
 	}
 };
@@ -246,6 +247,7 @@ exports.parseHeadingTag = function (headingTag) {
 		}
 	}
 
+	// Do we need to return the heading tag??
 	return {
 		count: count,
 		headingTag: headingTag
@@ -283,7 +285,7 @@ exports.processIncludeTags = function (file, currentFile, tags) {
  * @return {String}      Replaced file content
  */
 exports.replaceIncludeTags = function (file, cached) {
-	var obj = build[file];
+	var obj = this.build[file];
 	var replacedData;
 	var i;
 
@@ -295,10 +297,10 @@ exports.replaceIncludeTags = function (file, cached) {
 			replacedData = obj.parsedData;
 		}
 		else if (replacedData) {
-			replacedData = replacedData.replace(includeTag, build[currentFile].parsedData);
+			replacedData = replacedData.replace(includeTag, this.build[currentFile].parsedData);
 		}
 		else {
-			replacedData = obj.rawData.replace(includeTag, build[currentFile].parsedData);
+			replacedData = obj.rawData.replace(includeTag, this.build[currentFile].parsedData);
 		}
 	}
 
@@ -342,11 +344,12 @@ exports.stripFileTags = function (obj) {
  * @param  {String} data Data to write into file
  */
 exports.writeFile = function (parsedData) {
-	fs.writeFile(options.build, parsedData, function (err) {
+	var self = this;
+	fs.writeFile(this.options.build, parsedData, function (err) {
 		if (err) {
 			throw err;
 		}
 
-		console.info(options.build + ' has been built successfully');
+		console.info(self.options.build + ' has been built successfully');
 	});
 };

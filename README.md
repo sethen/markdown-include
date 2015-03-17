@@ -4,10 +4,10 @@
   * [Compile your markdown files](#compile-your-markdown-files)
   * [Make a table of contents](#make-a-table-of-contents)
 * [How To Install](#how-to-install)
-* [How To Use](#how-to-use)
-  * [From The Command Line](#from-the-command-line)
-  * [As A Module](#as-a-module)
+* [How To Use From The Command Line](#how-to-use-from-the-command-line)
   * [markdown.json](#markdownjson)
+* [How To Use As A Module](#how-to-use-as-a-module)
+  * [API](#api)
 * [How It Works](#how-it-works)
 
 
@@ -61,24 +61,14 @@ npm install markdown-include
 Use the `-g` flag if you wish to install markdown-include globally on your system.  Use the `--save` flag to save in your `package.json` file in your local project.
 
 
-# How To Use
+# How To Use From The Command Line
 
 markdown-include is very easy to use whether on the command line or in your own node project.  Each can help you compile your markdown files as you see fit.  markdown-include does require that you define a `markdown.json` file with your options for compile.  See below for all of the options available to you.
-
-## From The Command Line
 
 Run from the command line to compile your documents like so:
 
 ```
 node_modules/bin/cli.js path/to/markdown.json
-```
-
-## As A Module
-
-Just require in your node project:
-
-```
-var markdownInclude = require('markdown-include');
 ```
 
 ## markdown.json
@@ -92,6 +82,35 @@ var markdownInclude = require('markdown-include');
 | `tableOfContents`         | Object  | Object to hold options for table of contents generation.                   |
 | `tableOfContents.heading` | String  | Heading for table of contents (use markdown syntax if desired).            |
 | `tableOfContents.lead`    | String  | What navigation items in table of contents lead with.  If value is `number` will add numbers before each item and subitem.  If not, will add asterisks.  Refer to markdown syntax to understand the difference. |
+
+
+# How To Use As A Module
+
+Just require in your node project:
+
+```
+var markdownInclude = require('markdown-include');
+```
+
+## API
+
+When using as a module, markdown-include offers an API for you to work with markdown files as detailed below:
+
+### `buildLinkString(str)`
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.buildLinkString("My Link String"); // my-link-string
+```
+
+| Parameter(s)    | Type     | Returns  | Description                                                            |
+|:---------------:|:--------:|:---------|:----------------------------------------------------------------------:|
+| `string`        | `String` | `String` | File path of where everything should be compiled, like `README.md`.    |
+
+---
+
+
+
 # How It Works
 
 markdown-include works by recursively going through files based on the tags that are found.  For instance, consider the following in a `_README.md` file:
@@ -121,3 +140,10 @@ At that point it will start over in the original file and parse other include ta
 
 As you can see, you only need to reference one file which would be `_README.md`.  We didn't need to add `first-file.md` or `third-file.md`... markdown-include does that compiling for us by making an internal chain.
 
+**NOTE**:  You must provide markdown-include with the entire file path you're trying to find in your working directory.  For example, if `first-file.md` and `third-file.md` were in the `docs` directory together and `first-file.md` was trying to include `third-file.md` you would need to do the following in `first-file.md`:
+
+```
+#include "docs/third-file.md"
+```
+
+This is because markdown-include doesn't make any assumptions about where your files are.  Use the correct paths or you could run into errors!

@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/sethen/markdown-include/issues"
   },
-  "homepage": "https://github.com/sethen/markdown-include"
+  "homepage": "https://github.com/sethen/markdown-include",
+  "devDependencies": {
+    "intern": "^2.2.2"
+  }
 }
