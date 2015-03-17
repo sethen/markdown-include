@@ -6,35 +6,12 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
-var includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
-var ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
-var headingPattern = /^#+\s.+ !heading/gm;
-var tableOfContents = '';
 
+this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
+this.ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
+this.headingPattern = /^#+\s.+ !heading/gm;
+this.tableOfContents = '';
 this.build = {};
-
-/**
- * Builds links for table of contents
- * @param  {String} str String to test and transform
- * @return {String}     String for link
- */
-exports.buildLinkString = function (str) {
-	var linkPatterns = {
-		dot: /\./g,
-		stick: /\|/g
-	};
-	var key;
-
-	for (key in linkPatterns) {
-		var pattern = linkPatterns[key];
-
-		if (pattern.test(str)) {
-			str = str.replace(pattern, '');
-		}
-	}
-
-	return str.trim().split(' ').join('-').toLowerCase();
-};
 
 /**
  * Build content item for navigation
@@ -84,6 +61,29 @@ exports.buildContentItem = function (obj) {
 };
 
 /**
+ * Builds links for table of contents
+ * @param  {String} str String to test and transform
+ * @return {String}     String for link
+ */
+exports.buildLinkString = function (str) {
+	var linkPatterns = {
+		dot: /\./g,
+		stick: /\|/g
+	};
+	var key;
+
+	for (key in linkPatterns) {
+		var pattern = linkPatterns[key];
+
+		if (pattern.test(str)) {
+			str = str.replace(pattern, '');
+		}
+	}
+
+	return str.trim().split(' ').join('-').toLowerCase();
+};
+
+/**
  * Compile files from markdown.json
  * @param  {String} path File path to markdown.json
  */
@@ -102,10 +102,9 @@ exports.compileFiles = function (path) {
 			var file = files[i];
 
 			self.processFile(file);
-			console.log(self.build);
 			self.build[file].parsedData = self.stripFileTags({
 				data: self.build[file].parsedData, 
-				pattern: ignorePattern, 
+				pattern: this.ignorePattern, 
 				string: ' !ignore'
 			});
 
@@ -113,10 +112,10 @@ exports.compileFiles = function (path) {
 				self.compileHeadingTags(file);
 
 				if (self.options.tableOfContents.heading) {
-					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + tableOfContents + '\n\n' + self.build[file].parsedData;
+					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + this.tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 				else {
-					self.build[file].parsedData = tableOfContents + '\n\n' + self.build[file].parsedData;
+					self.build[file].parsedData = this.tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 			}
 
@@ -124,7 +123,6 @@ exports.compileFiles = function (path) {
 		}
 	});
 };
-
 
 /**
  * Compiling heading tags in a parsed file
@@ -139,12 +137,12 @@ exports.compileHeadingTags = function (file) {
 	for (i = 0; i < headingTags.length; i += 1) {
 		replacedHeadingTag = headingTags[i].replace(' !heading', '');
 		parsedHeading = this.parseHeadingTag(replacedHeadingTag);
-		tableOfContents += this.buildContentItem(parsedHeading);
+		this.tableOfContents += this.buildContentItem(parsedHeading);
 	}
 
 	this.build[file].parsedData = this.stripFileTags({
 		data: this.build[file].parsedData, 
-		pattern: headingPattern,
+		pattern: this.headingPattern,
 		string: ' !heading'
 	});
 };
@@ -155,7 +153,7 @@ exports.compileHeadingTags = function (file) {
  * @return {Array}             Array of matching heading tags
  */
 exports.findHeadingTags = function (parsedData) {
-	return parsedData.match(headingPattern) || [];
+	return parsedData.match(this.headingPattern) || [];
 };
 
 /**
@@ -165,10 +163,10 @@ exports.findHeadingTags = function (parsedData) {
  */
 exports.findIncludeTags = function (rawData) {
 	var ignores;
-	var includes = rawData.match(includePattern) || [];
+	var includes = rawData.match(this.includePattern) || [];
 
-	if (ignorePattern.test(rawData)) {
-		ignores = rawData.match(ignorePattern);
+	if (this.ignorePattern.test(rawData)) {
+		ignores = rawData.match(this.ignorePattern);
 	}
 
 	if (includes.length > 0 && ignores) {
@@ -187,6 +185,43 @@ exports.findIncludeTags = function (rawData) {
 	}
 
 	return includes;
+};
+
+/**
+ * [parseHeadingTag description]
+ * @param  {[type]} headingTag [description]
+ * @return {[type]}            [description]
+ */
+exports.parseHeadingTag = function (headingTag) {
+	var count = 0;
+	var i;
+
+	for (i = 0; i < headingTag.length; i += 1) {
+		if (headingTag[i] === '#') {
+			count += 1;
+		}
+		else {
+			break;
+		}
+	}
+
+	// Do we need to return the heading tag??
+	return {
+		count: count,
+		headingTag: headingTag
+	};
+};
+
+/**
+ * Parses an include tag to get a file path
+ * @param  {String} tag An include tag
+ * @return {String}     A file path
+ */
+exports.parseIncludeTag = function (tag) {
+	var firstQuote = tag.indexOf('"') + 1;
+	var lastQuote = tag.lastIndexOf('"');
+
+	return tag.substring(firstQuote, lastQuote);
 };
 
 /**
@@ -219,43 +254,6 @@ exports.processFile = function (file, currentFile) {
 };
 
 /**
- * Parses an include tag to get a file path
- * @param  {String} tag An include tag
- * @return {String}     A file path
- */
-exports.parseIncludeTag = function (tag) {
-	var firstQuote = tag.indexOf('"') + 1;
-	var lastQuote = tag.lastIndexOf('"');
-
-	return tag.substring(firstQuote, lastQuote);
-};
-
-/**
- * [parseHeadingTag description]
- * @param  {[type]} headingTag [description]
- * @return {[type]}            [description]
- */
-exports.parseHeadingTag = function (headingTag) {
-	var count = 0;
-	var i;
-
-	for (i = 0; i < headingTag.length; i += 1) {
-		if (headingTag[i] === '#') {
-			count += 1;
-		}
-		else {
-			break;
-		}
-	}
-
-	// Do we need to return the heading tag??
-	return {
-		count: count,
-		headingTag: headingTag
-	};
-};
-
-/**
  * Processes array of include tags and passes file for recursion
  * @param  {String} file        File passed for additional processing to check for more includes
  * @param  {String} currentFile Current file passed on recursion to check for circular dependencies
@@ -285,7 +283,7 @@ exports.processIncludeTags = function (file, currentFile, tags) {
  * @param  {String} file File content
  * @return {String}      Replaced file content
  */
-exports.replaceIncludeTags = function (file, cached) {
+exports.replaceIncludeTags = function (file) {
 	var obj = this.build[file];
 	var replacedData;
 	var i;
@@ -294,10 +292,7 @@ exports.replaceIncludeTags = function (file, cached) {
 		var includeTag = obj.includeTags[i];
 		var currentFile = obj.files[i];
 
-		if (cached) {
-			replacedData = obj.parsedData;
-		}
-		else if (replacedData) {
+		if (replacedData) {
 			replacedData = replacedData.replace(includeTag, this.build[currentFile].parsedData);
 		}
 		else {
@@ -344,9 +339,10 @@ exports.stripFileTags = function (obj) {
  * @param  {String} path Path to build new file
  * @param  {String} data Data to write into file
  */
-exports.writeFile = function (parsedData) {
+exports.writeFile = function (parsedData, context) {
 	var self = this;
-	fs.writeFile(this.options.build, parsedData, function (err) {
+
+	fs.writeFile(this.options.build, parsedData, context || function (err) {
 		if (err) {
 			throw err;
 		}

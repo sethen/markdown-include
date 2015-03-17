@@ -1,9 +1,8 @@
 define([
 	'intern!bdd',
 	'intern/chai!assert',
-	'intern/dojo/node!fs',
 	'intern/dojo/node!../../markdown-include'
-], function (bdd, assert, fs, markdownInclude) {
+], function (bdd, assert, markdownInclude) {
 	bdd.describe('markdownInclude.processFile', function () {
 		bdd.beforeEach(function () {
 			markdownInclude.processFile('tests/data/has_include_tags.md');

@@ -1,9 +1,8 @@
 define([
 	'intern!bdd',
 	'intern/chai!assert',
-	'intern/dojo/node!fs',
 	'intern/dojo/node!../../markdown-include'
-], function (bdd, assert, fs, markdownInclude) {
+], function (bdd, assert, markdownInclude) {
 	bdd.describe('markdownInclude.compileHeadingTags', function () {
 		bdd.after(function () {
 			markdownInclude.options = markdownInclude.build = {};

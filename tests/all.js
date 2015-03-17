@@ -6,5 +6,8 @@ define([
 	'./unit/findIncludeTags',
 	'./unit/parseIncludeTag',
 	'./unit/parseHeadingTag',
-	'./unit/processFile'
+	'./unit/processFile',
+	'./unit/processIncludeTags',
+	'./unit/replaceIncludeTags',
+	'./unit/writeFile'
 ]);
