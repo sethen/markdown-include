@@ -102,6 +102,7 @@ exports.compileFiles = function (path) {
 			var file = files[i];
 
 			self.processFile(file);
+			console.log(self.build);
 			self.build[file].parsedData = self.stripFileTags({
 				data: self.build[file].parsedData, 
 				pattern: ignorePattern, 
@@ -195,7 +196,7 @@ exports.findIncludeTags = function (rawData) {
  */
 exports.processFile = function (file, currentFile) {
 	if (file in this.build) {
-		replaceIncludeTags(file);
+		this.replaceIncludeTags(file);
 	}
 	else {
 		var rawData = fs.readFileSync(file).toString();
@@ -205,7 +206,7 @@ exports.processFile = function (file, currentFile) {
 		this.build[file] = {
 			files: files,
 			includeTags: includeTags,
-			rawData: rawData,
+			rawData: rawData
 		};
 
 		if (files && includeTags) {

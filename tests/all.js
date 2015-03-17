@@ -1,8 +1,10 @@
 define([
 	'./unit/buildContentItem',
 	'./unit/buildLinkString',
+	'./unit/compileHeadingTags',
 	'./unit/findHeadingTags',
 	'./unit/findIncludeTags',
 	'./unit/parseIncludeTag',
-	'./unit/parseHeadingTag'
+	'./unit/parseHeadingTag',
+	'./unit/processFile'
 ]);
