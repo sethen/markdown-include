@@ -8,5 +8,3 @@ Run from the command line to compile your documents like so:
 node_modules/bin/cli.js path/to/markdown.json
 ```
 
-#include "docs/how_to_use/markdown-json.md"
-

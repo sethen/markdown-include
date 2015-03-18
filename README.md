@@ -71,6 +71,7 @@ Run from the command line to compile your documents like so:
 node_modules/bin/cli.js path/to/markdown.json
 ```
 
+
 ## markdown.json
 
 `markdown.json` can be populated with the following options:
@@ -82,8 +83,6 @@ node_modules/bin/cli.js path/to/markdown.json
 | `tableOfContents`         | Object  | Object to hold options for table of contents generation.                   |
 | `tableOfContents.heading` | String  | Heading for table of contents (use markdown syntax if desired).            |
 | `tableOfContents.lead`    | String  | What navigation items in table of contents lead with.  If value is `number` will add numbers before each item and subitem.  If not, will add asterisks.  Refer to markdown syntax to understand the difference. |
-
-
 # How To Use As A Module
 
 Just require in your node project:
@@ -91,6 +90,9 @@ Just require in your node project:
 ```
 var markdownInclude = require('markdown-include');
 ```
+
+From there, you can use markdown-include's API to fit your needs.
+
 
 ## API
 
@@ -108,8 +110,6 @@ markdownInclude.buildLinkString("My Link String"); // my-link-string
 | `string`        | `String` | `String` | File path of where everything should be compiled, like `README.md`.    |
 
 ---
-
-
 
 # How It Works
 

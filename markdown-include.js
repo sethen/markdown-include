@@ -104,7 +104,7 @@ exports.compileFiles = function (path) {
 			self.processFile(file);
 			self.build[file].parsedData = self.stripFileTags({
 				data: self.build[file].parsedData, 
-				pattern: this.ignorePattern, 
+				pattern: self.ignorePattern, 
 				string: ' !ignore'
 			});
 
@@ -112,10 +112,10 @@ exports.compileFiles = function (path) {
 				self.compileHeadingTags(file);
 
 				if (self.options.tableOfContents.heading) {
-					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + this.tableOfContents + '\n\n' + self.build[file].parsedData;
+					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + self.tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 				else {
-					self.build[file].parsedData = this.tableOfContents + '\n\n' + self.build[file].parsedData;
+					self.build[file].parsedData = self.tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 			}
 

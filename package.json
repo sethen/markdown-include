@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/sethen/markdown-include",
   "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-shell": "^0.4.0",
     "intern": "^2.2.2"
   }
 }

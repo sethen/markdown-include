@@ -6,5 +6,5 @@ Just require in your node project:
 var markdownInclude = require('markdown-include');
 ```
 
-#include "docs/how_to_use/api.md"
+From there, you can use markdown-include's API to fit your needs.
 
