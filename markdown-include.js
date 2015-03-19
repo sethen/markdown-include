@@ -310,7 +310,7 @@ exports.replaceIncludeTags = function (file) {
  */
 exports.stripFileTags = function (obj) {
 	var replacedData;
-	
+
 	if (obj.pattern.test(obj.data)) {
 		var patterns = obj.data.match(obj.pattern);
 		var i;
@@ -332,6 +332,8 @@ exports.stripFileTags = function (obj) {
 
 		return replacedData;
 	}
+
+	return obj.data;
 };
 
 /**

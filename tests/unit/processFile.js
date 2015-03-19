@@ -4,6 +4,10 @@ define([
 	'intern/dojo/node!../../markdown-include'
 ], function (bdd, assert, markdownInclude) {
 	bdd.describe('markdownInclude.processFile', function () {
+		bdd.after(function () {
+			markdownInclude.build = markdownInclude.options = {};
+		});
+
 		bdd.beforeEach(function () {
 			markdownInclude.processFile('tests/data/has_include_tags.md');
 		});

@@ -1,0 +1,7 @@
+{
+	"build" : "tests/data/README.md",
+	"files" : ["tests/data/has_include_tags.md"],
+	"tableOfContents": {
+		"heading": "# Table of Contents"
+	}
+}

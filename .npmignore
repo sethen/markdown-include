@@ -1,2 +1,5 @@
 docs/
+tests/
+.gitignore
+gulpfile.js
 markdown.json
