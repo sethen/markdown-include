@@ -1,6 +1,7 @@
 define([
 	'./unit/buildContentItem',
 	'./unit/buildLinkString',
+	'./unit/compileFiles',
 	'./unit/compileHeadingTags',
 	'./unit/findHeadingTags',
 	'./unit/findIncludeTags',
@@ -8,5 +9,6 @@ define([
 	'./unit/parseHeadingTag',
 	'./unit/processFile',
 	'./unit/processIncludeTags',
-	'./unit/replaceIncludeTags'
+	'./unit/replaceIncludeTags',
+	'./unit/writeFile'
 ]);

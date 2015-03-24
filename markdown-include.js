@@ -6,6 +6,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
+var q = require('q');
 
 this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
 this.ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
@@ -88,7 +89,9 @@ exports.buildLinkString = function (str) {
  * @param  {String} path File path to markdown.json
  */
 exports.compileFiles = function (path) {
+	var deferred = q.defer();
 	var self = this;
+
 	fs.readFile(path, function (err, data) {
 		if (err) {
 			throw err;
@@ -119,9 +122,11 @@ exports.compileFiles = function (path) {
 				}
 			}
 
-			self.writeFile(self.build[file].parsedData);
+			deferred.resolve(self.writeFile(self.build[file].parsedData));
 		}
 	});
+
+	return deferred.promise;
 };
 
 /**
@@ -341,14 +346,17 @@ exports.stripFileTags = function (obj) {
  * @param  {String} path Path to build new file
  * @param  {String} data Data to write into file
  */
-exports.writeFile = function (parsedData, context) {
+exports.writeFile = function (parsedData) {
+	var deferred = q.defer();
 	var self = this;
 
-	fs.writeFile(this.options.build, parsedData, context || function (err) {
+	fs.writeFile(this.options.build, parsedData, function (err) {
 		if (err) {
 			throw err;
 		}
 
-		console.info(self.options.build + ' has been built successfully');
+		deferred.resolve(parsedData);
 	});
+
+	return deferred.promise;
 };

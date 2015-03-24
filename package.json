@@ -25,5 +25,8 @@
     "gulp": "^3.8.11",
     "gulp-shell": "^0.4.0",
     "intern": "^2.2.2"
+  },
+  "dependencies": {
+    "q": "^1.2.0"
   }
 }
