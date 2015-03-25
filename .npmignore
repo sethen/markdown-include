@@ -1,5 +1,6 @@
 docs/
 tests/
 .gitignore
+.travis.yml
 gulpfile.js
 markdown.json
