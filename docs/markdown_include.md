@@ -1,5 +1,7 @@
 # markdown-include !heading
 
+#include "docs/travis.md"
+
 markdown-include is built using Node.js and allows you to include markdown files into other markdown files using a C style include syntax.
 
 ## Compile your markdown files !heading

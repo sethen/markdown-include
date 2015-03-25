@@ -105,7 +105,7 @@ exports.compileFiles = function (path) {
 			var file = files[i];
 
 			self.processFile(file);
-			self.build[file].parsedData = self.stripFileTags({
+			self.build[file].parsedData = self.stripTagsInFile({
 				data: self.build[file].parsedData, 
 				pattern: self.ignorePattern, 
 				string: ' !ignore'
@@ -145,7 +145,7 @@ exports.compileHeadingTags = function (file) {
 		this.tableOfContents += this.buildContentItem(parsedHeading);
 	}
 
-	this.build[file].parsedData = this.stripFileTags({
+	this.build[file].parsedData = this.stripTagsInFile({
 		data: this.build[file].parsedData, 
 		pattern: this.headingPattern,
 		string: ' !heading'
@@ -167,24 +167,22 @@ exports.findHeadingTags = function (parsedData) {
  * @return {Array}          Array containing found include tags
  */
 exports.findIncludeTags = function (rawData) {
-	var ignores;
+	var ignores = rawData.match(this.ignorePattern) || [];
 	var includes = rawData.match(this.includePattern) || [];
 
-	if (this.ignorePattern.test(rawData)) {
-		ignores = rawData.match(this.ignorePattern);
-	}
-
-	if (includes.length > 0 && ignores) {
+	if (includes.length > 0 && ignores.length > 0) {
 		var i;
 
 		for (i = 0; i < ignores.length; i += 1) {
-			var ignoreTest = includes[i] + ' !ignore';
+			var testIncludeString = this.stripTag({
+				tag: ignores[i],
+				pattern: ' !ignore'
+			});
 
-			if (ignoreTest && includes.length === 1) {
-				includes = [];
-			}
-			else if (ignoreTest) {
-				includes.shift();
+			var index = includes.indexOf(testIncludeString);
+
+			if (index > -1) {
+				includes.splice(index, 1);
 			}
 		}
 	}
@@ -308,12 +306,16 @@ exports.replaceIncludeTags = function (file) {
 	return replacedData;
 };
 
+exports.stripTag = function (obj) {
+	return obj.tag.replace(obj.pattern, '');
+};
+
 /**
  * Strips tags in a given file
  * @param  {Object} obj Object containing file path, pattern to match and string to replace
  * @return {String}     Replaced data from object keys
  */
-exports.stripFileTags = function (obj) {
+exports.stripTagsInFile = function (obj) {
 	var replacedData;
 
 	if (obj.pattern.test(obj.data)) {
