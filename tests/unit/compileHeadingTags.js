@@ -15,12 +15,12 @@ define([
 				}
 			};
 
-			markdownInclude.processFile('tests/data/has_heading_tags.md');
+			markdownInclude.processFile('tests/data/docs/has_heading_tags.md');
 		});
 
 		bdd.it('should parse a file with headings', function () {
-			var compileHeadingTags = markdownInclude.compileHeadingTags('tests/data/has_heading_tags.md');
-			var parsedData = markdownInclude.build['tests/data/has_heading_tags.md'].parsedData;
+			var compileHeadingTags = markdownInclude.compileHeadingTags('tests/data/docs/has_heading_tags.md');
+			var parsedData = markdownInclude.build['tests/data/docs/has_heading_tags.md'].parsedData;
 
 			assert.equal(parsedData, '# First Test Heading\n## Second Test Heading\n### Third Test Heading\n#### Fourth Test Heading\n##### Fifth Test Heading\n###### Sixth Test Heading');
 		});

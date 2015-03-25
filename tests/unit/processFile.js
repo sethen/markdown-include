@@ -9,39 +9,39 @@ define([
 		});
 
 		bdd.beforeEach(function () {
-			markdownInclude.processFile('tests/data/has_include_tags.md');
+			markdownInclude.processFile('tests/data/docs/has_include_tags.md');
 		});
 
 		bdd.it('should add a key to the build object', function () {
-			assert.property(markdownInclude.build, 'tests/data/has_include_tags.md');
+			assert.property(markdownInclude.build, 'tests/data/docs/has_include_tags.md');
 		});
 
 		bdd.it('should know the include tags in the file', function () {
-			var build = markdownInclude.build['tests/data/has_include_tags.md'];
+			var build = markdownInclude.build['tests/data/docs/has_include_tags.md'];
 			assert.equal(build.includeTags.length, 2, 'Length matches');
 			assert.sameMembers(build.includeTags, [
-				'#include "tests/data/first_test_include.md"',
-				'#include "tests/data/second_test_include.md"'
+				'#include "tests/data/docs/1.md"',
+				'#include "tests/data/docs/2.md"'
 			]);
 		});
 
 		bdd.it('should know the file paths from the include tags found', function () {
-			var build = markdownInclude.build['tests/data/has_include_tags.md'];
+			var build = markdownInclude.build['tests/data/docs/has_include_tags.md'];
 			assert.equal(build.files.length, 2, 'Length matches');
 			assert.sameMembers(build.files, [
-				'tests/data/first_test_include.md',
-				'tests/data/second_test_include.md'
+				'tests/data/docs/1.md',
+				'tests/data/docs/2.md'
 			]);
 		});
 
 		bdd.it('should know the raw data of a file', function () {
-			var build = markdownInclude.build['tests/data/has_include_tags.md'];
-			assert.equal(build.rawData, '#include "tests/data/first_test_include.md"\n#include "tests/data/second_test_include.md"', 'Raw data matches');
+			var build = markdownInclude.build['tests/data/docs/has_include_tags.md'];
+			assert.equal(build.rawData, '#include "tests/data/docs/1.md"\n#include "tests/data/docs/2.md"', 'Raw data matches');
 		});
 
 		bdd.it('should know the parsed data of a file', function () {
-			var build = markdownInclude.build['tests/data/has_include_tags.md'];
-			assert.equal(build.parsedData, 'First test include.\nSecond test include.', 'Parsed data matches');
+			var build = markdownInclude.build['tests/data/docs/has_include_tags.md'];
+			assert.equal(build.parsedData, '1\n2', 'Parsed data matches');
 		});
 	});
 });

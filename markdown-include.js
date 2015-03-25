@@ -77,7 +77,7 @@ exports.buildLinkString = function (str) {
 		var pattern = linkPatterns[key];
 
 		if (pattern.test(str)) {
-			str = str.replace(pattern, '');
+			str = str.replace(pattern, ' ');
 		}
 	}
 
@@ -193,9 +193,9 @@ exports.findIncludeTags = function (rawData) {
 };
 
 /**
- * [parseHeadingTag description]
- * @param  {[type]} headingTag [description]
- * @return {[type]}            [description]
+ * Parses a heading tag according to the amount of asterisks
+ * @param  {String} headingTag String consisting of markdown formatted heading
+ * @return {Object}            Object consisting of key value pairs describing heading tag
  */
 exports.parseHeadingTag = function (headingTag) {
 	var count = 0;

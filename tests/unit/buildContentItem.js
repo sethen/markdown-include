@@ -19,6 +19,7 @@ define([
 				count: 1,
 				headingTag: '# My Heading To Link'
 			});
+
 			assert.equal(contentItem, '1. [My Heading To Link](#my-heading-to-link)\n', 'Content items match');
 		});
 
@@ -33,6 +34,7 @@ define([
 				count: 1,
 				headingTag: '# My Heading To Link'
 			});
+
 			assert.equal(contentItem, '* [My Heading To Link](#my-heading-to-link)\n', 'Content items match');
 		});
 	});

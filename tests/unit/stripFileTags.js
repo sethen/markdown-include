@@ -9,12 +9,12 @@ define([
 		});
 
 		bdd.before(function () {
-			markdownInclude.processFile('tests/data/has_heading_tags');
+			markdownInclude.processFile('tests/data/docs/has_heading_tags');
 		});
 
 		bdd.it('should strip tags based on a pattern', function () {
 			markdownInclude.stripFileTags({
-				data: markdownInclude.build['tests/data/has_heading_tags'].parsedData, 
+				data: markdownInclude.build['tests/data/docs/has_heading_tags'].parsedData, 
 				pattern: this.headingPattern,
 				string: ' !heading'
 			});
