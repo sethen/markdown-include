@@ -3,5 +3,4 @@
 #include "docs/how_to_use_command_line.md"
 #include "docs/markdown-json.md"
 #include "docs/how_to_use_module.md"
-#include "docs/api.md"
 #include "docs/how_it_works.md"

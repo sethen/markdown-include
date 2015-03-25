@@ -5,9 +5,8 @@
   * [Make a table of contents](#make-a-table-of-contents)
 * [How To Install](#how-to-install)
 * [How To Use From The Command Line](#how-to-use-from-the-command-line)
-  * [markdown.json](#markdownjson)
+  * [markdown.json](#markdown-json)
 * [How To Use As A Module](#how-to-use-as-a-module)
-  * [API](#api)
 * [How It Works](#how-it-works)
 
 
@@ -93,23 +92,6 @@ var markdownInclude = require('markdown-include');
 
 From there, you can use markdown-include's API to fit your needs.
 
-
-## API
-
-When using as a module, markdown-include offers an API for you to work with markdown files as detailed below:
-
-### `buildLinkString(str)`
-
-```javascript
-var markdownInclude = require('markdown-include');
-markdownInclude.buildLinkString("My Link String"); // my-link-string
-```
-
-| Parameter(s)    | Type     | Returns  | Description                                                            |
-|:---------------:|:--------:|:---------|:----------------------------------------------------------------------:|
-| `string`        | `String` | `String` | File path of where everything should be compiled, like `README.md`.    |
-
----
 
 # How It Works
 
