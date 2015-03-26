@@ -22,7 +22,7 @@ define([
 			var compileHeadingTags = markdownInclude.compileHeadingTags('tests/data/docs/has_heading_tags.md');
 			var parsedData = markdownInclude.build['tests/data/docs/has_heading_tags.md'].parsedData;
 
-			assert.equal(parsedData, '# First Test Heading\n## Second Test Heading\n### Third Test Heading\n#### Fourth Test Heading\n##### Fifth Test Heading\n###### Sixth Test Heading');
+			assert.equal(parsedData, '# First Test Heading\n## Second Test Heading\n### Third Test Heading\n#### Fourth Test Heading\n##### Fifth Test Heading\n###### Sixth Test Heading', 'Data matches');
 		});
 	});
 });

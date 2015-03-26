@@ -5,10 +5,12 @@ define([
 	'./unit/compileHeadingTags',
 	'./unit/findHeadingTags',
 	'./unit/findIncludeTags',
-	'./unit/parseIncludeTag',
 	'./unit/parseHeadingTag',
+	'./unit/parseIncludeTag',
 	'./unit/processFile',
 	'./unit/processIncludeTags',
 	'./unit/replaceIncludeTags',
+	'./unit/stripTag',
+	'./unit/stripTagsInFile',
 	'./unit/writeFile'
 ]);

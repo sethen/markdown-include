@@ -306,6 +306,11 @@ exports.replaceIncludeTags = function (file) {
 	return replacedData;
 };
 
+/**
+ * For stripping a pattern out of a tag
+ * @param  {Object} obj Key value pair include tag and pattern to strip
+ * @return {String}     String stripped
+ */
 exports.stripTag = function (obj) {
 	return obj.tag.replace(obj.pattern, '');
 };
