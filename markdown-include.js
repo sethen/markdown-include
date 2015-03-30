@@ -4,6 +4,7 @@
  * @version  0.1.0
  */
 
+/* eslint-env node */
 (function (global) {
 	/* jshint node: true */
 	'use strict';
@@ -92,6 +93,7 @@
 	/**
 	 * Compile files from markdown.json
 	 * @param  {String} path File path to markdown.json
+	 * @return {Object}      Promise to be resolved
 	 */
 	exports.compileFiles = function (path) {
 		var deferred = q.defer();
@@ -111,8 +113,8 @@
 
 				self.processFile(file);
 				self.build[file].parsedData = self.stripTagsInFile({
-					data: self.build[file].parsedData, 
-					pattern: self.ignorePattern, 
+					data: self.build[file].parsedData,
+					pattern: self.ignorePattern,
 					string: ' !ignore'
 				});
 
@@ -137,6 +139,7 @@
 	/**
 	 * Compiling heading tags in a parsed file
 	 * @param  {String} file File path
+	 * @return {Void}        Undefined
 	 */
 	exports.compileHeadingTags = function (file) {
 		var headingTags = this.findHeadingTags(this.build[file].parsedData);
@@ -151,7 +154,7 @@
 		}
 
 		this.build[file].parsedData = this.stripTagsInFile({
-			data: this.build[file].parsedData, 
+			data: this.build[file].parsedData,
 			pattern: this.headingPattern,
 			string: ' !heading'
 		});
@@ -236,6 +239,7 @@
 	 * Processes file for the life cycle
 	 * @param  {String} file        A file path
 	 * @param  {String} currentFile Current file that an include was found in
+	 * @return {Void}               Undefined
 	 */
 	exports.processFile = function (file, currentFile) {
 		if (file in this.build) {
@@ -354,8 +358,8 @@
 
 	/**
 	 * Write file wrapper
-	 * @param  {String} path Path to build new file
-	 * @param  {String} data Data to write into file
+	 * @param  {String} parsedData Data to write into file
+	 * @return {Object}            Promise to be resolved
 	 */
 	exports.writeFile = function (parsedData) {
 		var deferred = q.defer();
