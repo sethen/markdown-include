@@ -314,6 +314,21 @@ exports.replaceIncludeTags = function (file) {
 };
 
 /**
+ * Replace part of a string with something else
+ * @param  {Object} obj Object with key value pairs for options
+ * @return {String}     Replaced string
+ */
+exports.replaceWith = function (obj) {
+	var replaced = obj.string.substr(0, obj.index) + obj.replacement;
+
+	if (obj.preserve) {
+		return replaced + obj.string.substr(obj.index, obj.string.length);
+	}
+
+	return replaced;
+};
+
+/**
  * For stripping a pattern out of a tag
  * @param  {Object} obj Key value pair include tag and pattern to strip
  * @return {String}     String stripped
@@ -336,9 +351,12 @@ exports.stripTagsInFile = function (obj) {
 
 		for (i = 0; i < patterns.length; i += 1) {
 			var currentPattern = patterns[i];
-			var stringLength = obj.string.length;
-			var currentPatternTagLength = patterns[i].length;
-			var replacedTag = currentPattern.substring(0, currentPatternTagLength - stringLength);
+			var index = currentPattern.indexOf(obj.string);
+			var replacedTag = this.replaceWith({
+				string: currentPattern,
+				index: index,
+				replacement: ''
+			});
 
 			if (replacedData) {
 				replacedData = replacedData.replace(currentPattern, replacedTag);
