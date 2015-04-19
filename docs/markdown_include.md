@@ -1,6 +1,4 @@
-# markdown-include !heading
-
-#include "docs/travis.md"
+# markdown-include !heading [![Build Status](https://travis-ci.org/sethen/markdown-include.svg?branch=master)](https://travis-ci.org/sethen/markdown-include)
 
 markdown-include is built using Node.js and allows you to include markdown files into other markdown files using a C style include syntax.
 

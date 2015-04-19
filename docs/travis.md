@@ -1,1 +1,0 @@
-[![Build Status](https://travis-ci.org/sethen/markdown-include.svg?branch=master)](https://travis-ci.org/sethen/markdown-include)
