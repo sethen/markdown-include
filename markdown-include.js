@@ -30,38 +30,40 @@ exports.buildContentItem = function (obj) {
 	var lead = this.options.tableOfContents.lead && this.options.tableOfContents.lead === 'number' ? '1.' : '*';
 	var navItem;
 
-	/**
-	 * Small utility function for building links for navigation items
-	 * @param  {String} heading Navigation item
-	 * @return {String}         Navigation item that's linked
-	 */
-	function buildNavItem(heading) {
-		return '[' + item + '](#' + heading + ')\n';
-	}
-
 	switch (obj.count) {
 		case 1:
-			navItem = lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 		case 2:
-			navItem = '  ' + lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = '  ' + lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 		case 3:
-			navItem = '    ' + lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = '    ' + lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 		case 4:
-			navItem = '      ' + lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = '      ' + lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 		case 5:
-			navItem = '        ' + lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = '        ' + lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 		case 6:
-			navItem = '          ' + lead + ' ' + buildNavItem(headingTrimmed);
+			navItem = '          ' + lead + ' ' + this.buildLink(item, headingTrimmed);
 		break;
 	}
 
 	return navItem;
 };
+
+/**
+ * Utility function for building links
+ * @param  {String} item    Phrase for link
+ * @param  {String} heading ID for link
+ * @return {String}         Markdown style link
+ */
+exports.buildLink = function (item, heading) {
+	return '[' + item + '](#' + heading + ')\n';
+};
+
 
 /**
  * Builds links for table of contents
@@ -70,17 +72,24 @@ exports.buildContentItem = function (obj) {
  */
 exports.buildLinkString = function (str) {
 	var linkPatterns = {
-		dot: /\./g,
-		stick: /\|/g
+		dot: {
+			pattern: /\./g,
+			replace: '',
+		},
+		stick: {
+			pattern: /\|/g,
+			replace: ''
+		}
 	};
 	var key;
 
 	for (key in linkPatterns) {
 		if (linkPatterns.hasOwnProperty(key)) {
-			var pattern = linkPatterns[key];
+			var pattern = linkPatterns[key].pattern;
+			var replace = linkPatterns[key].replace || ' ';
 
 			if (pattern.test(str)) {
-				str = str.replace(pattern, ' ');
+				str = str.replace(pattern, replace);
 			}
 		}
 	}
