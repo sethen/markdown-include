@@ -10,9 +10,11 @@
 var fs = require('fs');
 var q = require('q');
 
+this.ignoreTag = ' !ignore';
+this.headingTag = ' !heading';
 this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md"/gm;
-this.ignorePattern = /^#include\s"(.+\/|\/|\w|-|\/)+.md" !ignore/gm;
-this.headingPattern = /^#+\s.+ !heading/gm;
+this.ignorePattern = new RegExp('^#include\\s"(.+\\/|\\/|\\w|-|\\/)+.md"' + this.ignoreTag, 'gm');
+this.headingPattern = new RegExp('^#+\\s.+' + this.headingTag, 'gm');
 this.tableOfContents = '';
 this.build = {};
 
@@ -122,7 +124,7 @@ exports.compileFiles = function (path) {
 			self.build[file].parsedData = self.stripTagsInFile({
 				data: self.build[file].parsedData,
 				pattern: self.ignorePattern,
-				string: ' !ignore'
+				string: self.ignoreTag
 			});
 
 			if (self.options.tableOfContents) {
@@ -152,7 +154,7 @@ exports.compileHeadingTags = function (file) {
 	var i;
 
 	for (i = 0; i < headingTags.length; i += 1) {
-		replacedHeadingTag = headingTags[i].replace(' !heading', '');
+		replacedHeadingTag = headingTags[i].replace(this.headingTag, '');
 		parsedHeading = this.parseHeadingTag(replacedHeadingTag);
 		this.tableOfContents += this.buildContentItem(parsedHeading);
 	}
@@ -160,7 +162,7 @@ exports.compileHeadingTags = function (file) {
 	this.build[file].parsedData = this.stripTagsInFile({
 		data: this.build[file].parsedData,
 		pattern: this.headingPattern,
-		string: ' !heading'
+		string: this.headingTag
 	});
 };
 
@@ -188,7 +190,7 @@ exports.findIncludeTags = function (rawData) {
 		for (i = 0; i < ignores.length; i += 1) {
 			var testIncludeString = this.stripTag({
 				tag: ignores[i],
-				pattern: ' !ignore'
+				pattern: this.ignoreTag
 			});
 
 			var index = includes.indexOf(testIncludeString);
