@@ -359,12 +359,20 @@ exports.stripTagsInFile = function (obj) {
 
 		for (i = 0; i < patterns.length; i += 1) {
 			var currentPattern = patterns[i];
-			var index = currentPattern.indexOf(obj.string);
-			var replacedTag = this.replaceWith({
-				string: currentPattern,
-				index: index,
-				replacement: ''
-			});
+			var replacedTag;
+
+			if (obj.replace) {
+				replacedTag = (typeof obj.replace === 'function') ? obj.replace(currentPattern) : obj.replace;
+			}
+			else {
+				var index = currentPattern.indexOf(obj.string);
+
+				replacedTag = this.replaceWith({
+					string: currentPattern,
+					index: index,
+					replacement: ''
+				});
+			}
 
 			if (replacedData) {
 				replacedData = replacedData.replace(currentPattern, replacedTag);
