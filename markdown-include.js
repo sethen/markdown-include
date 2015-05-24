@@ -134,9 +134,13 @@ exports.compileFiles = function (path) {
 					self.build[file].parsedData = self.options.tableOfContents.heading + '\n\n' + self.tableOfContents + '\n\n' + self.build[file].parsedData;
 				}
 			}
-
-			deferred.resolve(self.writeFile(self.build[file].parsedData));
 		}
+
+		if (self.customTags && self.customTags.length) {
+			self.build[file].parsedData = self.resolveCustomTags(self.build[file].parsedData);
+		}
+
+		deferred.resolve(self.writeFile(self.build[file].parsedData));
 	});
 
 	return deferred.promise;
@@ -334,6 +338,28 @@ exports.replaceWith = function (obj) {
 	}
 
 	return replaced;
+};
+
+exports.resolveCustomTags = function (data) {
+	if (data) {
+		var k;
+
+		for (k = 0; k < this.customTags.length; k += 1) {
+			var customTagObj = this.customTags[k];
+			var replacedData;
+
+			if (replacedData) {
+				customTagObj.data = replacedData;
+			}
+			else {
+				customTagObj.data = data;
+			}
+
+			replacedData = this.stripTagsInFile(customTagObj);
+		}
+
+		return replacedData;
+	}
 };
 
 /**
