@@ -7,6 +7,23 @@
 * [How To Use From The Command Line](#how-to-use-from-the-command-line)
   * [markdown.json](#markdown-json)
 * [How To Use As A Module](#how-to-use-as-a-module)
+  * [API](#api)
+    * [`buildLink`](#buildlink)
+    * [`buildLinkString`](#buildlinkstring)
+    * [`compileFiles`](#compilefiles)
+    * [`compileHeadingTags`](#compileheadingtags)
+    * [`findHeadingTags`](#findheadingtags)
+    * [`findIncludeTags`](#findincludetags)
+    * [`parseHeadingTag`](#parseheadingtag)
+    * [`parseIncludeTag`](#parseincludetag)
+    * [`processFile`](#processfile)
+    * [`processIncludeTags`](#processincludetags)
+    * [`replaceIncludeTags`](#replaceincludetags)
+    * [`replaceWith`](#replacewith)
+    * [`resolveCustomTags`](#resolvecustomtags)
+    * [`stripTag`](#striptag)
+    * [`stripTagsInFile`](#striptagsinfile)
+    * [`writeFile`](#writefile)
 * [How It Works](#how-it-works)
 
 
@@ -95,6 +112,431 @@ var markdownInclude = require('markdown-include');
 From there, you can use markdown-include's API to fit your needs.
 
 
+## API
+
+When using as a module, markdown-include offers an API for you to work with markdown files as detailed below:
+
+---
+
+### `buildLink`
+
+#### Description
+
+A method for making markdown style anchor tags.
+
+#### Signature
+
+`buildLink(title: String, anchor: String) => String`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                          |
+|:---------------:|:--------:|:------------------------------------:|
+| `title`         | `String` | Title of markdown style link.        |
+| `anchor`        | `String` | Markdown style anchor for linking.   |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.buildLink("My Link String", "#my-link-string"); // [My Link String](#my-link-string)
+```
+
+---
+### `buildLinkString`
+
+#### Description
+
+A method for taking strings and building friendly markdown links.  This is mostly used internally for building the table of contents.
+
+#### Signature
+
+`buildLinkString(str: String) => String`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                                                            |
+|:---------------:|:--------:|:----------------------------------------------------------------------:|
+| `str`           | `String` | File path of where everything should be compiled, like `README.md`.    |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.buildLinkString("My Link String"); // my-link-string
+```
+
+---
+### `compileFiles`
+
+#### Description
+
+This is probably the most important method in markdown-include.  It takes a path to your markdown.json file, reads your options and returns a promise.  When the promise is resolved it returns the data to you.  This is exactly the same as running markdown-include in the command line as it runs through the whole lifecycle.
+
+#### Signature
+
+`compileFiles(path: String) => Object<Promise>` 
+
+#### Parameters
+
+| Parameter(s)   | Type     | Description                                              |
+|:--------------:|:--------:|:--------------------------------------------------------:|
+| `path`         | `String` | Compiles files when given the path to `markdown.json`    |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.compileFiles("path/to/markdown.json").then(function (data) {
+	// do something with compiled files
+});
+```
+
+---
+### `compileHeadingTags`
+
+#### Description
+
+A method for compiling heading tags (`!heading`) in a given file.
+
+#### Signature
+
+`compileHeadingTags(file: String)`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                          |
+|:---------------:|:--------:|:------------------------------------:|
+| `file`          | `String` | File with `!heading` tags            |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.compileHeadingTags("my_file.md");
+```
+
+---
+### `findHeadingTags`
+
+#### Description
+
+A method for finding heading tags (`!heading`) in a string.
+
+#### Signature
+
+`findHeadingTags(data: String) => Array<String>`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                          |
+|:---------------:|:--------:|:------------------------------------:|
+| `data`          | `String` | Data with `!heading` tags            |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.findHeadingTags("### A Heading !heading"); // [ "### A Heading !heading" ]
+```
+
+---
+### `findIncludeTags`
+
+#### Description
+
+A method for finding include tags (`#include "my-include.md"`) in a string.
+
+#### Signature
+
+`findIncludeTags(data: String) => Array<String>`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                                  |
+|:---------------:|:--------:|:--------------------------------------------:|
+| `data`          | `String` | Data with `#include "my-include.md"` tags    |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.findIncludeTags('#include "my-include.md"'); // [ '#include "my-include.md"' ]
+```
+
+---
+### `parseHeadingTag`
+
+#### Description
+
+Parses a heading tag based on the amount of asterisks present before it (`### Heading`)
+
+#### Signature
+
+`parseHeadingTag(headingTag: String) => Object<count: Number, headingTag: String>`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                                  |
+|:---------------:|:--------:|:--------------------------------------------:|
+| `headingTag`    | `String` | Heading tag to parse                         |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.parseHeadingTag('### Heading'); // { count: 3, headingTag: 'Heading' }
+```
+
+---
+### `parseIncludeTag`
+
+#### Description
+
+Parses a include tag (`#include "my-include.md"`)
+
+#### Signature
+
+`parseIncludeTag(tag: String) => String`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                                  |
+|:---------------:|:--------:|:--------------------------------------------:|
+| `tag`           | `String` | Heading tag to parse                         |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.parseIncludeTag('#include "my-include.md"'); // "my-include.md"
+```
+
+---
+### `processFile`
+
+#### Description
+
+Processes a file and adds it to the build object for compiling.
+
+#### Signature
+
+`processFile(file: String, currentFile: String)`
+
+#### Parameters
+
+| Parameter(s)    | Type     | Description                                                           |
+|:---------------:|:--------:|:---------------------------------------------------------------------:|
+| `file`          | `String` | File for processing                                                   |
+| `currentFile`   | `String` | Current file include file was found in for additional processing      |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.processFile('another-include.md', 'my-include.md');
+```
+
+---
+### `processIncludeTags`
+
+#### Description
+
+Processes a file and adds it to the build object for compiling.
+
+#### Signature
+
+`processIncludeTags(file: String, currentFile: String, tags: Array<String>) => Array<String>`
+
+#### Parameters
+
+| Parameter(s)    | Type            | Description                                                           |
+|:---------------:|:---------------:|:---------------------------------------------------------------------:|
+| `file`          | `String`        | File for processing                                                   |
+| `currentFile`   | `String`        | Current file include file was found in for additional processing      |
+| `tags`          | `Array<String>` | Current file include file was found in for additional processing      |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.processIncludeTags('another-include.md', 'my-include.md', ['one-include.md']); // ['one-include.md']
+```
+
+---
+### `replaceIncludeTags`
+
+#### Description
+
+Replaces include tags in given file with actual data (file must be added to build object first with `processFile`).
+
+#### Signature
+
+`replaceIncludeTags(file: String) => String`
+
+#### Parameters
+
+| Parameter(s)    | Type            | Description                        |
+|:---------------:|:---------------:|:----------------------------------:|
+| `file`          | `String`        | File to replace include tags       |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.replaceIncludeTags('my-include.md'); // 'Content in my-include.md!'
+```
+
+---
+### `replaceWith`
+
+#### Description
+
+Utility method for transforming a string.
+
+#### Signature
+
+`replaceWith(Object<string: String, index: Number, preserve: Boolean, replacement: String>) => String`
+
+#### Parameters
+
+| Parameter(s)      | Type            | Description                            |
+|:-----------------:|:---------------:|:--------------------------------------:|
+| `obj.string`      | `String`        | String to transform                    |
+| `obj.index`       | `Number`        | Index to start transformation to end   |
+| `obj.preserve`    | `Boolean`       | Preserve original string               |
+| `obj.replacement` | `String`        | String to use for replacement          |
+
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.replaceWith({
+	string: "string",
+	index: 4,
+	replacement: "myString"
+}); // 'somemyString'
+```
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.replaceWith({
+	string: "string",
+	index: 4,
+	preserve: true,
+	replacement: "myString"
+}); // 'somemyStringthing'
+```
+
+---
+### `resolveCustomTags`
+
+#### Description
+
+Method for resolving custom tags.  Looks in `customTags` object attached to markdown include module.
+
+#### Signature
+
+`resolveCustomTags(data: String) => String` 
+
+#### Parameters
+
+| Parameter(s)      | Type            | Description                            |
+|:-----------------:|:---------------:|:--------------------------------------:|
+| `data`            | `String`        | String with custom tags                |
+
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.resolveCustomTags('### Custom Tag !myCustomTag');
+```
+
+---
+### `stripTag`
+
+#### Description
+
+Method for stripping tags in a string.
+
+#### Signature
+
+`stripTag(Object<tag: String, pattern, String) => String` 
+
+#### Parameters
+
+| Parameter(s)      | Type            | Description                            |
+|:-----------------:|:---------------:|:--------------------------------------:|
+| `obj.tag`         | `String`        | String with tag in it                  |
+| `obj.pattern`     | `String`        | Pattern to replace in tag              |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.stripTag('### Custom Tag !myCustomTag'); // ### Custom Tag
+```
+
+---
+### `stripTagsInFile`
+
+#### Description
+
+Strips tags in a given file.
+
+#### Signature
+
+`stripTag(Object<data: String, pattern: String, string: String, replace: String|Function>) => String` 
+
+#### Parameters
+
+| Parameter(s)      | Type                | Description                            |
+|:-----------------:|:-------------------:|:--------------------------------------:|
+| `obj.data`        | `String`            | Data with tags to strip                |
+| `obj.pattern`     | `String`            | Pattern to look for                    |
+| `obj.string`      | `String`            | String to replace                      |
+| `obj.replace`     | `String|Function`   | String or function to replace with     |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.stripTagsInFile({
+	data: 'String with tags !ignore',
+	pattern: <RegExp>,
+	string: '!ignore'
+});
+```
+
+---
+### `writeFile`
+
+#### Description
+
+Writing contents to a file using the file path outlined in `markdown.json`.
+
+#### Signature
+
+`stripTag(parsedData: String) => Object<Promise>` 
+
+#### Parameters
+
+| Parameter(s)      | Type            | Description                            |
+|:-----------------:|:---------------:|:--------------------------------------:|
+| `parsedData`      | `String`        | String to write                        |
+
+#### Example
+
+```javascript
+var markdownInclude = require('markdown-include');
+markdownInclude.writeFile('contents').then(function (data) {
+	// continue...
+});
+```
+
+---
 # How It Works
 
 markdown-include works by recursively going through files based on the tags that are found.  For instance, consider the following in a `_README.md` file:

@@ -58,12 +58,12 @@ exports.buildContentItem = function (obj) {
 
 /**
  * Utility function for building links
- * @param  {String} item    Phrase for link
- * @param  {String} heading ID for link
+ * @param  {String} title   Phrase for link
+ * @param  {String} anchor  ID for link
  * @return {String}         Markdown style link
  */
-exports.buildLink = function (item, heading) {
-	return '[' + item + '](#' + heading + ')\n';
+exports.buildLink = function (title, anchor) {
+	return '[' + title + '](#' + anchor + ')\n';
 };
 
 
@@ -74,6 +74,10 @@ exports.buildLink = function (item, heading) {
  */
 exports.buildLinkString = function (str) {
 	var linkPatterns = {
+		backtick: {
+			pattern: /`/g,
+			replace: ''
+		},
 		dot: {
 			pattern: /\./g,
 			replace: '',
