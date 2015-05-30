@@ -17,6 +17,7 @@ this.ignorePattern = new RegExp('^#include\\s"(.+\\/|\\/|\\w|-|\\/)+.md"' + this
 this.headingPattern = new RegExp('^#+\\s.+' + this.headingTag, 'gm');
 this.tableOfContents = '';
 this.build = {};
+this.customTags = [];
 
 /**
  * Build content item for navigation
