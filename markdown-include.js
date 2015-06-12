@@ -1,7 +1,7 @@
 /**
  * @author Sethen Maleno (https://github.com/sethen)
  * @description Include markdown files into other markdown files
- * @version  0.1.0
+ * @version  0.3.0
  */
 var exec = require('child_process').exec;
 var fs = require('fs');
