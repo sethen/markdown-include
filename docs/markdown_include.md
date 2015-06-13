@@ -6,14 +6,14 @@ markdown-include is built using Node.js and allows you to include markdown files
 
 ## Compile your markdown files !heading
 
-markdown-include's main feature is that it allows you to include allows you to include markdown files into other markdown files, like so:
+markdown-include's main feature is that it allows you to include markdown files into other markdown files.  For example, you could place the following into a markdown file:
 
 ```
 #include "markdown-file.md" !ignore
 #include "another-markdown-file.md" !ignore
 ```
 
-Assuming that `markdown.file.md` contents are:
+And assuming that `markdown.file.md` contents are:
 
 ```
 Something in markdown file!
@@ -32,9 +32,11 @@ Something in markdown file!
 Something in another markdown file!
 ```
 
+Pretty neat, huh?
+
 ## Make a table of contents !heading
 
-Aside from compiling your markdown files, markdown-include can also build your table of contents.  This works by evaluating the heading tags inside of your files.  Since markdown works on using `#` for headings, this makes it easy to assemble table of contents from them.  The more `#` you have in front of your headings (up to 6) will decide how the table of contents is built.  Use one `#` and it's a top level navigation item... Use two `#` and it would be underneath the previous navigation item and so on.
+Aside from compiling your markdown files, markdown-include can also build your table of contents.  This works by evaluating the heading tags inside of your files.  Since markdown works on using `#` for making HTML headings, this makes it easy to assemble table of contents from them.  The more `#` you have in front of your headings (up to 6) will decide how the table of contents is built.  Use one `#` and it's a top level navigation item... Use two `#` and it would be underneath the previous navigation item and so on.
 
 For each heading that you would like to be included in a table of contents just add ` !heading` to the end of it.
 

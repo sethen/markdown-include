@@ -1,6 +1,6 @@
 {
   "name": "markdown-include",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Include markdown files into other markdown files with C style syntax.",
   "main": "markdown-include.js",
   "repository": {
@@ -22,11 +22,13 @@
   },
   "homepage": "https://github.com/sethen/markdown-include",
   "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-shell": "^0.4.0",
     "intern": "^2.2.2"
   },
   "dependencies": {
     "q": "^1.2.0"
+  },
+  "scripts": {
+    "docs": "./bin/cli.js markdown.json",
+    "test": "node_modules/.bin/intern-client config=tests/intern.js"
   }
 }

@@ -1,6 +1,6 @@
 # How To Make Custom Tags !heading
 
-Custom tags are now supported as of 0.3.2 of markdown-include.  Adding custom tags to your documentation is quite easy to do.
+Custom tags are now supported as of 0.4.0 of markdown-include.  Adding custom tags to your documentation is quite easy to do.
 
 Custom tags can only be used when markdown-include is being required as a module.  If you wish to make this available via the command line, you must require markdown-include in a node module and call it from the command line.
 
