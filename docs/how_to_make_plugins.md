@@ -41,7 +41,7 @@ markdownInclude.registerPlugin({
 
 This gives you free range to do whatever you want with the tag you want to replace.  Once the tag is encountered markdown-include will run the function.
 
-After the tag and it's replacement is registed, it's business as usual:
+After the tag and it's replacement is registered, it's business as usual:
 
 ```javascript
 markdownInclude.compileFiles('../path/to/markdown.json').then(function () {
@@ -51,7 +51,7 @@ markdownInclude.compileFiles('../path/to/markdown.json').then(function () {
 
 You can also use another form of registering a plugins if it fits your coding style better:
 
-```
+```javascript
 markdownInclude.registerPlugin(/^#.+ !myTag/gm, function (tag) {
 	return 'my replacement!';
 });
