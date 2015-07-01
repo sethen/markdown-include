@@ -4,5 +4,5 @@
 #include "docs/markdown-json.md"
 #include "docs/how_to_use_module.md"
 #include "docs/api/_README.md"
-#include "docs/how_to_make_custom_tags.md"
+#include "docs/how_to_make_plugins.md"
 #include "docs/how_it_works.md"

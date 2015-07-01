@@ -305,6 +305,18 @@ exports.processIncludeTags = function (file, currentFile, tags) {
 	return collection;
 };
 
+exports.registerPlugin = function () {
+	if (arguments[0].pattern && arguments[0].replace) {
+		this.customTags.push(arguments[0]);
+	}
+	else {
+		this.customTags.push({
+			pattern: arguments[0],
+			replace: arguments[1]
+		});
+	}
+};
+
 /**
  * Replaces include tags with actual content from files
  * @param  {String} file File content
