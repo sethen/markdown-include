@@ -1,7 +1,7 @@
 /**
  * @author Sethen Maleno (https://github.com/sethen)
  * @description Include markdown files into other markdown files
- * @version  0.4.1
+ * @version  0.4.3
  */
 
 /* eslint-env node */

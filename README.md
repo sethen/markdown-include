@@ -76,8 +76,6 @@ For each heading that you would like to be included in a table of contents just 
 
 markdown-include is available on npm for easy installation:
 
-fuck!
-
 ```
 npm install markdown-include
 ```
