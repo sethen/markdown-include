@@ -2,8 +2,6 @@
 
 markdown-include is available on npm for easy installation:
 
-#something !myTag
-
 ```
 npm install markdown-include
 ```
