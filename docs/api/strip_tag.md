@@ -6,7 +6,7 @@ Method for stripping tags in a string.
 
 #### Signature
 
-`stripTag(Object<tag: String, pattern, String) => String` 
+`stripTag(Object<tag: String, pattern: String>) => String` 
 
 #### Parameters
 
