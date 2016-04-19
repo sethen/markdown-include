@@ -75,12 +75,16 @@ exports.buildLink = function (title, anchor) {
  */
 exports.buildLinkString = function (str) {
 	var linkPatterns = {
-		comma: {
-			pattern: /,\s+/g,
+		ampersand: {
+			pattern: /&\s+/g,
 			replace: ''
 		},
 		backtick: {
 			pattern: /`/g,
+			replace: ''
+		},
+		comma: {
+			pattern: /,\s+/g,
 			replace: ''
 		},
 		dot: {
