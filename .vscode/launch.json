@@ -1,0 +1,29 @@
+{
+   // Use IntelliSense to learn about possible Node.js debug attributes.
+   // Hover to view descriptions of existing attributes.
+   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+   "version": "0.2.0",
+   "configurations": [
+      {
+         "type": "node",
+         "request": "launch",
+         "name": "Launch Single File",
+         "program": "${workspaceRoot}\\bin\\cli.js",
+         "cwd": "C:\\Users\\dbrown\\Source\\Repos\\team\\.docs\\",
+         "args": [
+            "C:\\Users\\dbrown\\Source\\Repos\\team\\.docs\\markdown.json"
+         ]
+      },
+      {
+         "type": "node",
+         "request": "launch",
+         "name": "Launch Folders",
+         "program": "${workspaceRoot}\\bin\\cli.js",
+         "cwd": "C:\\Users\\dbrown\\Source\\Repos\\team\\.docs\\",
+         "args": [
+            "C:\\Users\\dbrown\\Source\\Repos\\team\\.docs",
+            "C:\\Users\\dbrown\\Source\\Repos\\team\\docs"
+         ]
+      }
+   ]
+}

@@ -104,6 +104,15 @@ exports.buildLinkString = function (str) {
 	return str.trim().split(' ').join('-').toLowerCase();
 };
 
+exports.compileFolders = function(inDir, outDir){
+   var deferred = q.defer();
+   var self = this;
+
+   deferred.resolve();
+
+   return deferred.promise;
+};
+
 /**
  * Compile files from markdown.json
  * @param  {String} path File path to markdown.json
@@ -145,7 +154,7 @@ exports.compileFiles = function (path) {
 			self.build[file].parsedData = self.resolveCustomTags(self.build[file].parsedData);
 		}
 
-		deferred.resolve(self.writeFile(self.build[file].parsedData));
+      deferred.resolve(self.writeFile(self.build[file].parsedData, self.options.build));
 	});
 
 	return deferred.promise;
@@ -434,12 +443,13 @@ exports.stripTagsInFile = function (obj) {
 /**
  * Write file wrapper
  * @param  {String} parsedData Data to write into file
+ * @param  {String} outFile    File to write into
  * @return {Object}            Promise to be resolved
  */
-exports.writeFile = function (parsedData) {
+exports.writeFile = function (parsedData, outFile) {
 	var deferred = q.defer();
 
-	fs.writeFile(this.options.build, parsedData, function (err) {
+   fs.writeFile(outFile, parsedData, function (err) {
 		if (err) {
 			throw err;
 		}

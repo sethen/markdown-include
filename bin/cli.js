@@ -3,9 +3,19 @@
 /* eslint-env node */
 'use strict';
 
-var markdownJson = process.argv[2];
 var markdownInclude = require('../markdown-include');
 
-markdownInclude.compileFiles(markdownJson).then(function () {
-	console.info(markdownInclude.options.build + ' have been built successfully');
-});
+if (process.argv.length === 3) {
+	var markdownJson = process.argv[2];
+
+	markdownInclude.compileFiles(markdownJson).then(function () {
+		console.info(markdownInclude.options.build + ' have been built successfully');
+	});
+} else {
+	var inDir = process.argv[2];
+	var outDir = process.argv[3];
+
+	markdownInclude.compileFolders(inDir, outDir).then(function () {
+		console.info(inDir + ' has been processed successfully');
+	});
+}
