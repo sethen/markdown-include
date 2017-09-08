@@ -14,7 +14,7 @@ define([
 
 		bdd.it('should write parsed data to file', function () {
 			var dfd = this.async(1000);
-			markdownInclude.writeFile(parsedData).then(dfd.callback(function (data) {
+         markdownInclude.writeFile(parsedData, writePath).then(dfd.callback(function (data) {
 				assert.equal(data, parsedData, 'Data matches');
 			}));
 		});
