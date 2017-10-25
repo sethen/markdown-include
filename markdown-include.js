@@ -25,32 +25,30 @@ this.customTags = [];
  * @return {String}     String for markdown navigation item
  */
 exports.buildContentItem = function (obj) {
-	var headingTag = obj.headingTag;
 	var count = obj.count;
-	var item = headingTag.substring(count + 1);
-	var index = headingTag.indexOf(item);
-	var headingTrimmed = this.buildLinkString(headingTag.substring(index));
+	var item = obj.item;
+	var itemLink = this.buildLinkString(item);
 	var lead = this.options.tableOfContents.lead && this.options.tableOfContents.lead === 'number' ? '1.' : '*';
 	var navItem;
 
-	switch (obj.count) {
+	switch (count) {
 		case 1:
-			navItem = lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = lead + ' ' + this.buildLink(item, itemLink);
 		break;
 		case 2:
-			navItem = '  ' + lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = '  ' + lead + ' ' + this.buildLink(item, itemLink);
 		break;
 		case 3:
-			navItem = '    ' + lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = '    ' + lead + ' ' + this.buildLink(item, itemLink);
 		break;
 		case 4:
-			navItem = '      ' + lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = '      ' + lead + ' ' + this.buildLink(item, itemLink);
 		break;
 		case 5:
-			navItem = '        ' + lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = '        ' + lead + ' ' + this.buildLink(item, itemLink);
 		break;
 		case 6:
-			navItem = '          ' + lead + ' ' + this.buildLink(item, headingTrimmed);
+			navItem = '          ' + lead + ' ' + this.buildLink(item, itemLink);
 		break;
 	}
 
@@ -167,13 +165,18 @@ exports.compileFiles = function (path) {
 exports.compileHeadingTags = function (file) {
 	var headingTags = this.findHeadingTags(this.build[file].parsedData);
 	var replacedHeadingTag;
-	var parsedHeading;
+	var parsedHeadings = [];
 	var i;
 
 	for (i = 0; i < headingTags.length; i += 1) {
 		replacedHeadingTag = headingTags[i].replace(this.headingTag, '');
-		parsedHeading = this.parseHeadingTag(replacedHeadingTag);
-		this.tableOfContents += this.buildContentItem(parsedHeading);
+		parsedHeadings.push(this.parseHeadingTag(replacedHeadingTag));
+	}
+	var minCount = this.getMinCount(parsedHeadings);
+
+	for (i = 0; i < parsedHeadings.length; i += 1) {
+		parsedHeadings[i].count = parsedHeadings[i].count - minCount + 1;
+		this.tableOfContents += this.buildContentItem(parsedHeadings[i]);
 	}
 
 	this.build[file].parsedData = this.stripTagsInFile({
@@ -182,6 +185,17 @@ exports.compileHeadingTags = function (file) {
 		string: this.headingTag
 	});
 };
+
+exports.getMinCount = function getMinCount(parsedHeadings) {
+	var minCount = 0;
+	for (var i = 0; i < parsedHeadings.length; i += 1) {
+		var count = parsedHeadings[i].count;
+		if (minCount === 0 || count < minCount) {
+			minCount = count;
+		}
+	}
+	return minCount;
+}
 
 /**
  * Finding heading tags that have !heading
@@ -228,6 +242,7 @@ exports.findIncludeTags = function (rawData) {
  */
 exports.parseHeadingTag = function (headingTag) {
 	var count = 0;
+	var item;
 	var i;
 
 	for (i = 0; i < headingTag.length; i += 1) {
@@ -235,6 +250,7 @@ exports.parseHeadingTag = function (headingTag) {
 			count += 1;
 		}
 		else {
+			item = headingTag.slice(count + 1);
 			break;
 		}
 	}
@@ -242,7 +258,8 @@ exports.parseHeadingTag = function (headingTag) {
 	// Do we need to return the heading tag??
 	return {
 		count: count,
-		headingTag: headingTag
+		headingTag: headingTag,
+		item: item
 	};
 };
 

@@ -1,6 +1,7 @@
 /* eslint-env amd */
 define([
 	'./unit/buildContentItem',
+	'./unit/buildTableOfContents',
 	'./unit/buildLinkString',
 	'./unit/compileFiles',
 	'./unit/compileHeadingTags',
