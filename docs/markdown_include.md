@@ -13,7 +13,7 @@ markdown-include's main feature is that it allows you to include markdown files 
 #include "another-markdown-file.md" !ignore
 ```
 
-And assuming that `markdown.file.md` contents are:
+And assuming that `markdown-file.md` contents are:
 
 ```
 Something in markdown file!
