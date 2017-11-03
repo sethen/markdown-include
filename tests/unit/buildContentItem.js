@@ -17,7 +17,8 @@ define([
 
 			var contentItem = markdownInclude.buildContentItem({
 				count: 1,
-				headingTag: '# My Heading To Link'
+				headingTag: '# My Heading To Link',
+				item: 'My Heading To Link'
 			});
 
 			assert.equal(contentItem, '1. [My Heading To Link](#my-heading-to-link)\n', 'Content items match');
@@ -32,7 +33,8 @@ define([
 
 			var contentItem = markdownInclude.buildContentItem({
 				count: 1,
-				headingTag: '# My Heading To Link'
+				headingTag: '# My Heading To Link',
+				item: 'My Heading To Link'
 			});
 
 			assert.equal(contentItem, '* [My Heading To Link](#my-heading-to-link)\n', 'Content items match');

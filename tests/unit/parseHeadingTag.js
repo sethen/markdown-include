@@ -8,5 +8,9 @@ define([
 			var count = markdownInclude.parseHeadingTag('### heading').count;
 			assert.equal(count, 3, 'Counts match');
 		});
+		bdd.it('should return the item string from a heading tag', function () {
+			var item = markdownInclude.parseHeadingTag('### heading').item;
+			assert.equal(item, 'heading', 'Item match');
+		});
 	});
 });
