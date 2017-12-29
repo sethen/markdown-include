@@ -9,7 +9,6 @@
 
 var fs = require('fs');
 var q = require('q');
-var path = require('path');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
@@ -105,6 +104,12 @@ exports.buildLinkString = function (str) {
 	return str.trim().split(' ').join('-').toLowerCase();
 };
 
+/**
+ * Compile files from one folder into another without a markdown.json.
+ * @param  {String} inDir  folder to process
+ * @param  {String} outDir folder to write final files into
+ * @return {Object}        Promise to be resolved
+ */
 exports.compileFolders = function (inDir, outDir) {
 	var deferred = q.defer();
 	var self = this;
@@ -112,13 +117,12 @@ exports.compileFolders = function (inDir, outDir) {
 	fs.readdir(inDir, function (err, files) {
 		for (var i = 0; i < files.length; i++) {
 
-         var file = files[i];
+			var file = files[i];
 
-         // Skip directories
+			// Skip directories
 			if (fs.statSync(file).isDirectory()) {
 				continue;
-         }
-         
+			}
 			var outFile = path.join(outDir, file);
 
 			self.processFile(file);
@@ -261,8 +265,8 @@ exports.parseHeadingTag = function (headingTag) {
 	for (i = 0; i < headingTag.length; i += 1) {
 		if (headingTag[i] === '#') {
 			count += 1;
-      } 
-      else {
+		}
+		else {
 			break;
 		}
 	}
@@ -295,8 +299,8 @@ exports.parseIncludeTag = function (tag) {
 exports.processFile = function (file, currentFile) {
 	if (file in this.build) {
 		this.replaceIncludeTags(file);
-   }
-   else {
+	}
+	else {
 		var rawData = fs.readFileSync(file).toString();
 		var includeTags = this.findIncludeTags(rawData);
 		var files = includeTags.length ? this.processIncludeTags(file, currentFile, includeTags) : null;
@@ -309,8 +313,8 @@ exports.processFile = function (file, currentFile) {
 
 		if (files && includeTags) {
 			this.build[file].parsedData = this.replaceIncludeTags(file);
-      }
-      else {
+		}
+		else {
 			this.build[file].parsedData = rawData;
 		}
 	}
@@ -344,8 +348,8 @@ exports.processIncludeTags = function (file, currentFile, tags) {
 exports.registerPlugin = function () {
 	if (arguments[0].pattern && arguments[0].replace) {
 		this.customTags.push(arguments[0]);
-   }
-   else {
+	}
+	else {
 		this.customTags.push({
 			pattern: arguments[0],
 			replace: arguments[1]
@@ -369,8 +373,8 @@ exports.replaceIncludeTags = function (file) {
 
 		if (replacedData) {
 			replacedData = replacedData.replace(includeTag, this.build[currentFile].parsedData);
-      }
-      else {
+		}
+		else {
 			replacedData = obj.rawData.replace(includeTag, this.build[currentFile].parsedData);
 		}
 	}
@@ -403,8 +407,8 @@ exports.resolveCustomTags = function (data) {
 
 			if (replacedData) {
 				customTagObj.data = replacedData;
-         }
-         else {
+			}
+			else {
 				customTagObj.data = data;
 			}
 
@@ -442,8 +446,8 @@ exports.stripTagsInFile = function (obj) {
 
 			if (obj.replace) {
 				replacedTag = (typeof obj.replace === 'function') ? obj.replace(currentPattern) : obj.replace;
-         }
-         else {
+			}
+			else {
 				var index = currentPattern.indexOf(obj.string);
 
 				replacedTag = this.replaceWith({
@@ -455,8 +459,8 @@ exports.stripTagsInFile = function (obj) {
 
 			if (replacedData) {
 				replacedData = replacedData.replace(currentPattern, replacedTag);
-         }
-         else {
+			}
+			else {
 				replacedData = obj.data.replace(currentPattern, replacedTag);
 			}
 		}
