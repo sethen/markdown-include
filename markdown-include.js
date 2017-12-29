@@ -37,22 +37,22 @@ exports.buildContentItem = function (obj) {
 	switch (obj.count) {
 		case 1:
 			navItem = lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 		case 2:
 			navItem = '  ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 		case 3:
 			navItem = '    ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 		case 4:
 			navItem = '      ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 		case 5:
 			navItem = '        ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 		case 6:
 			navItem = '          ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-			break;
+		break;
 	}
 
 	return navItem;
@@ -261,7 +261,8 @@ exports.parseHeadingTag = function (headingTag) {
 	for (i = 0; i < headingTag.length; i += 1) {
 		if (headingTag[i] === '#') {
 			count += 1;
-		} else {
+      } 
+      else {
 			break;
 		}
 	}
@@ -294,7 +295,8 @@ exports.parseIncludeTag = function (tag) {
 exports.processFile = function (file, currentFile) {
 	if (file in this.build) {
 		this.replaceIncludeTags(file);
-	} else {
+   }
+   else {
 		var rawData = fs.readFileSync(file).toString();
 		var includeTags = this.findIncludeTags(rawData);
 		var files = includeTags.length ? this.processIncludeTags(file, currentFile, includeTags) : null;
@@ -307,7 +309,8 @@ exports.processFile = function (file, currentFile) {
 
 		if (files && includeTags) {
 			this.build[file].parsedData = this.replaceIncludeTags(file);
-		} else {
+      }
+      else {
 			this.build[file].parsedData = rawData;
 		}
 	}
@@ -341,7 +344,8 @@ exports.processIncludeTags = function (file, currentFile, tags) {
 exports.registerPlugin = function () {
 	if (arguments[0].pattern && arguments[0].replace) {
 		this.customTags.push(arguments[0]);
-	} else {
+   }
+   else {
 		this.customTags.push({
 			pattern: arguments[0],
 			replace: arguments[1]
@@ -365,7 +369,8 @@ exports.replaceIncludeTags = function (file) {
 
 		if (replacedData) {
 			replacedData = replacedData.replace(includeTag, this.build[currentFile].parsedData);
-		} else {
+      }
+      else {
 			replacedData = obj.rawData.replace(includeTag, this.build[currentFile].parsedData);
 		}
 	}
@@ -398,7 +403,8 @@ exports.resolveCustomTags = function (data) {
 
 			if (replacedData) {
 				customTagObj.data = replacedData;
-			} else {
+         }
+         else {
 				customTagObj.data = data;
 			}
 
@@ -436,7 +442,8 @@ exports.stripTagsInFile = function (obj) {
 
 			if (obj.replace) {
 				replacedTag = (typeof obj.replace === 'function') ? obj.replace(currentPattern) : obj.replace;
-			} else {
+         }
+         else {
 				var index = currentPattern.indexOf(obj.string);
 
 				replacedTag = this.replaceWith({
@@ -448,7 +455,8 @@ exports.stripTagsInFile = function (obj) {
 
 			if (replacedData) {
 				replacedData = replacedData.replace(currentPattern, replacedTag);
-			} else {
+         }
+         else {
 				replacedData = obj.data.replace(currentPattern, replacedTag);
 			}
 		}

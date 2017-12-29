@@ -7,6 +7,7 @@ When using as a module, markdown-include offers an API for you to work with mark
 #include "docs/api/build_link.md"
 #include "docs/api/build_link_string.md"
 #include "docs/api/compile_files.md"
+#include "docs/api/compileFolders.md"
 #include "docs/api/compile_heading_tags.md"
 #include "docs/api/find_heading_tags.md"
 #include "docs/api/find_include_tags.md"
