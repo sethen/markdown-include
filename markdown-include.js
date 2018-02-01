@@ -9,6 +9,7 @@
 
 var fs = require('fs');
 var q = require('q');
+var p = require('path');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
@@ -123,7 +124,7 @@ exports.compileFolders = function (inDir, outDir) {
 			if (fs.statSync(file).isDirectory()) {
 				continue;
 			}
-			var outFile = path.join(outDir, file);
+			var outFile = p.join(outDir, file);
 
 			self.processFile(file);
 			self.build[file].parsedData = self.stripTagsInFile({
