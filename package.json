@@ -25,6 +25,7 @@
     "intern": "^2.2.2"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "q": "^1.2.0"
   },
   "scripts": {
