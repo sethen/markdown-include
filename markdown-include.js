@@ -10,6 +10,7 @@
 var fs = require('fs');
 var q = require('q');
 var p = require('path');
+var async = require('async');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
@@ -37,22 +38,22 @@ exports.buildContentItem = function (obj) {
 	switch (obj.count) {
 		case 1:
 			navItem = lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 2:
 			navItem = '  ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 3:
 			navItem = '    ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 4:
 			navItem = '      ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 5:
 			navItem = '        ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 6:
 			navItem = '          ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 	}
 
 	return navItem;
@@ -109,21 +110,19 @@ exports.buildLinkString = function (str) {
  * Compile files from one folder into another without a markdown.json.
  * @param  {String} inDir  folder to process
  * @param  {String} outDir folder to write final files into
- * @return {Object}        Promise to be resolved
+ * @param  {Function} callback called after all the files are processed
  */
-exports.compileFolders = function (inDir, outDir) {
-	var deferred = q.defer();
+exports.compileFolders = function (inDir, outDir, callback) {
 	var self = this;
 
 	fs.readdir(inDir, function (err, files) {
-		for (var i = 0; i < files.length; i++) {
-
-			var file = files[i];
-
+		async.each(files, function (file, cb) {
 			// Skip directories
 			if (fs.statSync(file).isDirectory()) {
-				continue;
+				cb();
+				return;
 			}
+
 			var outFile = p.join(outDir, file);
 
 			self.processFile(file);
@@ -137,12 +136,10 @@ exports.compileFolders = function (inDir, outDir) {
 				self.build[file].parsedData = self.resolveCustomTags(self.build[file].parsedData);
 			}
 
-			self.writeFile(self.build[file].parsedData, outFile);
-		}
-		deferred.resolve();
+			// Passing in cb to signal to async.each when the write it complete. 
+			fs.writeFile(outFile, self.build[file].parsedData, cb);
+		}, callback);
 	});
-
-	return deferred.promise;
 };
 
 /**
