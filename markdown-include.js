@@ -9,10 +9,14 @@
 
 var fs = require('fs');
 var q = require('q');
+var p = require('path');
+var async = require('async');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
-this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"/gm;
+// This now finds #include "" or <!-- #include "" -->
+// Using a single line comment allows you to not upset linters for markdown.
+this.includePattern = /(^#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"|^<!\-\-\s#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"\s\-\->)/gm;
 this.ignorePattern = new RegExp('^#include\\s"(.+\\/|\\/|\\w|-|\\/)+\.(md|markdown)"' + this.ignoreTag, 'gm');
 this.headingPattern = new RegExp('^#+\\s.+' + this.headingTag, 'gm');
 this.tableOfContents = '';
@@ -36,22 +40,22 @@ exports.buildContentItem = function (obj) {
 	switch (obj.count) {
 		case 1:
 			navItem = lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 2:
 			navItem = '  ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 3:
 			navItem = '    ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 4:
 			navItem = '      ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 5:
 			navItem = '        ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 		case 6:
 			navItem = '          ' + lead + ' ' + this.buildLink(item, headingTrimmed);
-		break;
+			break;
 	}
 
 	return navItem;
@@ -105,6 +109,42 @@ exports.buildLinkString = function (str) {
 };
 
 /**
+ * Compile files from one folder into another without a markdown.json.
+ * @param  {String} inDir  folder to process
+ * @param  {String} outDir folder to write final files into
+ * @param  {Function} callback called after all the files are processed
+ */
+exports.compileFolders = function (inDir, outDir, callback) {
+	var self = this;
+
+	fs.readdir(inDir, function (err, files) {
+		async.each(files, function (file, cb) {
+			// Skip directories
+			if (fs.statSync(file).isDirectory()) {
+				cb();
+				return;
+			}
+
+			var outFile = p.join(outDir, file);
+
+			self.processFile(file);
+			self.build[file].parsedData = self.stripTagsInFile({
+				data: self.build[file].parsedData,
+				pattern: self.ignorePattern,
+				string: self.ignoreTag
+			});
+
+			if (self.customTags && self.customTags.length) {
+				self.build[file].parsedData = self.resolveCustomTags(self.build[file].parsedData);
+			}
+
+			// Passing in cb to signal to async.each when the write it complete. 
+			fs.writeFile(outFile, self.build[file].parsedData, cb);
+		}, callback);
+	});
+};
+
+/**
  * Compile files from markdown.json
  * @param  {String} path File path to markdown.json
  * @return {Object}      Promise to be resolved
@@ -145,7 +185,7 @@ exports.compileFiles = function (path) {
 			self.build[file].parsedData = self.resolveCustomTags(self.build[file].parsedData);
 		}
 
-		deferred.resolve(self.writeFile(self.build[file].parsedData));
+		deferred.resolve(self.writeFile(self.build[file].parsedData, self.options.build));
 	});
 
 	return deferred.promise;
@@ -434,12 +474,13 @@ exports.stripTagsInFile = function (obj) {
 /**
  * Write file wrapper
  * @param  {String} parsedData Data to write into file
+ * @param  {String} outFile    File to write into
  * @return {Object}            Promise to be resolved
  */
-exports.writeFile = function (parsedData) {
+exports.writeFile = function (parsedData, outFile) {
 	var deferred = q.defer();
 
-	fs.writeFile(this.options.build, parsedData, function (err) {
+	fs.writeFile(outFile, parsedData, function (err) {
 		if (err) {
 			throw err;
 		}
