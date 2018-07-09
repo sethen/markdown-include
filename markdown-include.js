@@ -14,7 +14,9 @@ var async = require('async');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
-this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"/gm;
+// This now finds #include "" or <!-- #include "" -->
+// Using a single line comment allows you to not upset linters for markdown.
+this.includePattern = /(^#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"|^<!\-\-\s#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"\s\-\->)/gm;
 this.ignorePattern = new RegExp('^#include\\s"(.+\\/|\\/|\\w|-|\\/)+\.(md|markdown)"' + this.ignoreTag, 'gm');
 this.headingPattern = new RegExp('^#+\\s.+' + this.headingTag, 'gm');
 this.tableOfContents = '';
