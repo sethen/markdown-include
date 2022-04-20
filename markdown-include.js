@@ -12,7 +12,7 @@ var q = require('q');
 
 this.ignoreTag = ' !ignore';
 this.headingTag = ' !heading';
-this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/)+\.(md|markdown)"/gm;
+this.includePattern = /^#include\s"(.+\/|\/|\w|-|\/|\.)+\.(md|markdown)"/gm;
 this.ignorePattern = new RegExp('^#include\\s"(.+\\/|\\/|\\w|-|\\/)+\.(md|markdown)"' + this.ignoreTag, 'gm');
 this.headingPattern = new RegExp('^#+\\s.+' + this.headingTag, 'gm');
 this.tableOfContents = '';
